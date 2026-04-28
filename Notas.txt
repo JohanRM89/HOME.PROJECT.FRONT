@@ -1,0 +1,62 @@
+Módulos de la app (visión clara)
+✅ Módulo Auth
+Responsabilidad única:
+
+Login
+Register
+Current User
+Token handling
+
+✅ Módulo Tasks
+
+CRUD tareas
+Estado (pendiente / completada)
+Asignación a organización o usuario
+
+✅ Módulo Organizations
+
+Crear organización
+Miembros
+Roles (admin / member)
+
+✅ Módulo Profile
+
+Editar datos
+Cambiar contraseña
+Avatar
+
+Cada módulo NO conoce a los otros directamente.
+
+5️⃣ SOLID aplicado a React Native (ejemplo real)
+✅ S — Single Responsibility
+
+// ❌ mal
+LoginScreen.tsx
+- controla el form
+- llama la API
+- guarda el token
+
+// ✅ bien
+LoginScreen -> llama useLogin()
+useLogin -> usa LoginUseCase
+LoginUseCase -> depende de AuthRepository
+
+✅ D — Dependency Inversion
+
+// domain/AuthRepository.ts
+export interface AuthRepository {
+  login(email: string, password: string): Promise<User>
+}
+
+// infrastructure/auth.api.ts
+export class AuthApi implements AuthRepository {
+  async login(email: string, password: string) {
+    return http.post('/auth/login', { email, password })
+  }
+}
+ El dominio no depende de Axios ni Expo.
+
+ Estructura del proyecto 
+
+app/ = UI + navegación
+modules/ = lógica de negocio (SOLID)
