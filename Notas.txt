@@ -60,3 +60,9 @@ export class AuthApi implements AuthRepository {
 
 app/ = UI + navegación
 modules/ = lógica de negocio (SOLID)
+Que realiza el UI 
+UI no conoce Axios ni endpoints.
+
+
+///Correr el proyecto
+ npx expo start -c --android             
