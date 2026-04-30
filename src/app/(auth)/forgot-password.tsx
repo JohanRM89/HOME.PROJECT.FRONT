@@ -33,6 +33,7 @@ export default function ForgotPasswordScreen() {
         try {
             const useCase = new AuthUseCase(new AuthApi());
             const dataresposne = await useCase.sendEmailRestorePass(data.email);
+            console.log(dataresposne)
             setApiSucces(dataresposne.message)
         } catch (error: any) {
             setApiError(error.message);

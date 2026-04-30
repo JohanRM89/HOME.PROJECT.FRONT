@@ -4,6 +4,7 @@ export interface AuthState {
   user: User | null;
   token: string | null;
   expiresAt: string | null;
+  isHydrated: boolean | null;
 
   login: (data: {
     user: User;
@@ -12,6 +13,14 @@ export interface AuthState {
   }) => Promise<void>;
 
   logout: () => Promise<void>;
+
+  hydrate: (
+    data: {
+      user: User;
+      token: string;
+      expiresAt: string;
+    } | null,
+  ) => void;
 }
 
 export interface Credenciales {

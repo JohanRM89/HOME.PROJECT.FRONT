@@ -26,7 +26,7 @@ export class AuthApi implements AuthRepository {
   }
   async registerUser(dataSend: RegisterUser): Promise<RegisterUserData> {
     const response = await httpClient.post(RegistroUsuario, {
-      dataSend
+      ...dataSend
     });
     const data = response.data;
     return {
@@ -34,6 +34,8 @@ export class AuthApi implements AuthRepository {
       id: data.data.id,
       name: data.data.name,
       email: data.data.email,
+
+
 
     }
   };

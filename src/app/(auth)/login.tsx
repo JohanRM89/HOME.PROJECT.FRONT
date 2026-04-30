@@ -12,7 +12,7 @@ import { z } from "zod";
 
 
 const schema = z.object({
-  email: z.string().email("Email inválido"),
+  email: z.string().email("Correo inválido"),
   password: z.string().min(6, "Mínimo 6 caracteres"),
 });
 
@@ -110,6 +110,19 @@ export default function LoginScreen() {
             }}
           >
             ¿Olvidaste tu contraseña?
+          </Text>
+        </Link>
+        {/* Link de recuperar contraseña */}
+
+        <Link href="/(auth)/register">
+          <Text
+            style={{
+              textAlign: "center",
+              marginTop: 12,
+              color: "#6750A4", // Material 3 primary
+            }}
+          >
+            Deseas registrarse 
           </Text>
         </Link>
 
