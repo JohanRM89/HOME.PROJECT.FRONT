@@ -1,10 +1,12 @@
-///Se realiza la creación de la conexión con el Back
-//NOTA: La variable de ser creada desde el Env del archivo principal del proeycto
 import axios from "axios";
+import { Platform } from "react-native";
+
+const BASE_URL =
+  Platform.OS === "android"
+    ? "http://10.0.2.2:3000/api"
+    : "http://localhost:3000/api";
 
 export const httpClient = axios.create({
-  baseURL: "http://localhost:3000/api/",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: BASE_URL,
+  headers: { "Content-Type": "application/json" },
 });

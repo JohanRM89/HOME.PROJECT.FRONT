@@ -14,8 +14,15 @@ import { Ionicons } from "@expo/vector-icons";
 export default function HomeScreen() {
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
+      {/* Mensaje de bienvenida para el usuario */}
+       <Text variant="headlineMedium" style={{ marginBottom: 12 }}>
+        Grupo familiar
+      </Text>
+ 
+
+
       {/* ═══════════════════════════════ */}
-      {/* 1️⃣ ESTADOS DEL GRUPO FAMILIAR */}
+      {/* ESTADOS DEL GRUPO FAMILIAR */}
       {/* ═══════════════════════════════ */}
       <Text variant="headlineMedium" style={{ marginBottom: 12 }}>
         Grupo familiar
@@ -147,8 +154,8 @@ function TaskCard({
     status === "Pendiente"
       ? "#F2B705"
       : status === "En proceso"
-      ? "#1E88E5"
-      : "#2E7D32";
+        ? "#1E88E5"
+        : "#2E7D32";
 
   return (
     <Card style={{ marginBottom: 12 }}>

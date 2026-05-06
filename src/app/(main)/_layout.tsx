@@ -67,6 +67,16 @@ export default function MainLayout() {
           ),
         }}
       />
+          {/* Calendar */}
+      <Tabs.Screen
+        name="calendar"
+        options={{
+          title: "Calendario",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="bar-chart-outline" size={size} color={color} />
+          ),
+        }}
+      />
 
       {/* PROFILE */}
       <Tabs.Screen
