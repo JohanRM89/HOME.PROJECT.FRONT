@@ -1,11 +1,12 @@
 import { AuthUseCase } from "@/modules/auth/application/auth.usecase";
 import { AuthApi } from "@/modules/auth/infrastructure/auth.api";
+import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Pressable, View } from "react-native";
+import { Pressable } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import { z } from "zod";
 
@@ -44,9 +45,7 @@ export default function ForgotPasswordScreen() {
 
     return (
         <>
-            <View style={{ padding: 24, gap: 16 }}>
-
-
+            <ScreenContainer>
                 {/* BOTÓN VOLVER */}
 
                 <Pressable
@@ -98,7 +97,8 @@ export default function ForgotPasswordScreen() {
                     <HelperText type="info" visible={!!apiSucces}>
                         {apiSucces}
                     </HelperText>)}
-            </View>
+
+            </ScreenContainer>
         </>
     )
 

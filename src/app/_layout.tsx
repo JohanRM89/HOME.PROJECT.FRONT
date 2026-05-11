@@ -5,10 +5,12 @@ import { useAuthStore } from "@/modules/auth/ui/auth.store";
 
 import * as storage from "@/shared/storage/secureStorage";
 import { useEffect } from "react";
+import { View } from "react-native";
 import { PaperProvider } from "react-native-paper";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 
-const STORAGE_KEY = "auth";
+const STORAGE_KEY = "auth-storage";
 
 export default function RootLayout() {
 
@@ -23,9 +25,14 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <PaperProvider theme={theme}>
-      <Stack screenOptions={{ headerShown: false }} />
-    </PaperProvider>
+
+    <SafeAreaProvider>
+      <PaperProvider theme={theme}>
+        <View style={{ flex: 1, backgroundColor: "#F8F6F6" }}>
+          <Stack screenOptions={{ headerShown: false }} />
+        </View>
+      </PaperProvider>
+    </SafeAreaProvider>
+
   );
 }
- 

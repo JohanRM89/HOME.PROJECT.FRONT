@@ -1,3 +1,4 @@
+import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -36,74 +37,78 @@ export default function ProfileScreen() {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
-      {/* ───────────────────────── */}
-      {/* HEADER */}
-      {/* ───────────────────────── */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="chevron-back" size={24} color="#000" />
-        </TouchableOpacity>
+    <ScreenContainer>
 
-        <Text style={styles.headerTitle}>Perfil</Text>
-
-        {/* Espacio para centrar el título */}
-        <View style={{ width: 24 }} />
-      </View>
-
-      {/* ───────────────────────── */}
-      {/* PERFIL USUARIO */}
-      {/* ───────────────────────── */}
-      <View style={styles.profileSection}>
-        <View style={styles.avatarWrapper}>
-          <Image
-            source={{
-              uri: "https://ui-avatars.com/api/?name=Alejandro+Garcia",
-            }}
-            style={styles.avatar}
-          />
-
-          {/* BOTÓN EDITAR */}
-          <TouchableOpacity style={styles.editAvatarButton}>
-            <Ionicons name="pencil" size={16} color="#FFF" />
+      <View style={styles.container}>
+        {/* ───────────────────────── */}
+        {/* HEADER */}
+        {/* ───────────────────────── */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="chevron-back" size={24} color="#000" />
           </TouchableOpacity>
+
+          <Text style={styles.headerTitle}>Perfil</Text>
+
+          {/* Espacio para centrar el título */}
+          <View style={{ width: 24 }} />
         </View>
 
-        <Text style={styles.name}>Alejandro García</Text>
-        <Text style={styles.email}>
-          alejandro.garcia@hometask.com
-        </Text>
+        {/* ───────────────────────── */}
+        {/* PERFIL USUARIO */}
+        {/* ───────────────────────── */}
+        <View style={styles.profileSection}>
+          <View style={styles.avatarWrapper}>
+            <Image
+              source={{
+                uri: "https://ui-avatars.com/api/?name=Alejandro+Garcia",
+              }}
+              style={styles.avatar}
+            />
+
+            {/* BOTÓN EDITAR */}
+            <TouchableOpacity style={styles.editAvatarButton}>
+              <Ionicons name="pencil" size={16} color="#FFF" />
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.name}>Alejandro García</Text>
+          <Text style={styles.email}>
+            alejandro.garcia@hometask.com
+          </Text>
+        </View>
+
+        {/* ───────────────────────── */}
+        {/* CONFIGURACIÓN */}
+        {/* ───────────────────────── */}
+        <Text style={styles.sectionTitle}>Configuración</Text>
+
+        <FlatList
+          data={settingsOptions}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <MenuItem
+              icon={item.icon}
+              title={item.title}
+              subtitle={item.subtitle}
+            />
+          )}
+        />
+
+        {/* ───────────────────────── */}
+        {/* CUENTA */}
+        {/* ───────────────────────── */}
+        <Text style={styles.sectionTitle}>Cuenta</Text>
+
+        <MenuItem
+          icon="log-out-outline"
+          title="Cerrar sesión"
+          danger
+          onPress={() => console.log("Logout")}
+        />
       </View>
+    </ScreenContainer>
 
-      {/* ───────────────────────── */}
-      {/* CONFIGURACIÓN */}
-      {/* ───────────────────────── */}
-      <Text style={styles.sectionTitle}>Configuración</Text>
-
-      <FlatList
-        data={settingsOptions}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <MenuItem
-            icon={item.icon}
-            title={item.title}
-            subtitle={item.subtitle}
-          />
-        )}
-      />
-
-      {/* ───────────────────────── */}
-      {/* CUENTA */}
-      {/* ───────────────────────── */}
-      <Text style={styles.sectionTitle}>Cuenta</Text>
-
-      <MenuItem
-        icon="log-out-outline"
-        title="Cerrar sesión"
-        danger
-        onPress={() => console.log("Logout")}
-      />
-    </View>
   );
 }
 

@@ -1,3 +1,4 @@
+import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { ScrollView, View } from "react-native";
@@ -11,79 +12,83 @@ export default function AlertsScreen() {
   const [filter, setFilter] = useState("Todas");
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
-      {/* ═══════════════════════════════ */}
-      {/* TÍTULO */}
-      {/* ═══════════════════════════════ */}
-      <Text variant="headlineMedium" style={{ marginBottom: 16 }}>
-        Notificaciones
-      </Text>
+    <ScreenContainer>
 
-      {/* ═══════════════════════════════ */}
-      {/* FILTROS */}
-      {/* ═══════════════════════════════ */}
-      <View style={{ flexDirection: "row", gap: 8, marginBottom: 24 }}>
-        {["Todas", "Tareas", "Alertas", "Familia"].map((item) => (
-          <Chip
-            key={item}
-            selected={filter === item}
-            onPress={() => setFilter(item)}
-          >
-            {item}
-          </Chip>
-        ))}
-      </View>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
+        {/* ═══════════════════════════════ */}
+        {/* TÍTULO */}
+        {/* ═══════════════════════════════ */}
+        <Text variant="headlineMedium" style={{ marginBottom: 16 }}>
+          Notificaciones
+        </Text>
 
-      {/* ═══════════════════════════════ */}
-      {/* SECCIÓN HOY */}
-      {/* ═══════════════════════════════ */}
-      <SectionTitle title="Hoy" />
+        {/* ═══════════════════════════════ */}
+        {/* FILTROS */}
+        {/* ═══════════════════════════════ */}
+        <View style={{ flexDirection: "row", gap: 8, marginBottom: 24 }}>
+          {["Todas", "Tareas", "Alertas", "Familia"].map((item) => (
+            <Chip
+              key={item}
+              selected={filter === item}
+              onPress={() => setFilter(item)}
+            >
+              {item}
+            </Chip>
+          ))}
+        </View>
 
-      <AlertRow
-        icon="clipboard-outline"
-        title="Tarea pendiente"
-        description="Actualizar documentos familiares"
-        time="10:45 AM"
-      />
+        {/* ═══════════════════════════════ */}
+        {/* SECCIÓN HOY */}
+        {/* ═══════════════════════════════ */}
+        <SectionTitle title="Hoy" />
 
-      <AlertRow
-        icon="alert-circle-outline"
-        title="Recordatorio"
-        description="Cita médica mañana"
-        time="08:30 AM"
-      />
+        <AlertRow
+          icon="clipboard-outline"
+          title="Tarea pendiente"
+          description="Actualizar documentos familiares"
+          time="10:45 AM"
+        />
 
-      {/* ═══════════════════════════════ */}
-      {/* SECCIÓN HACE 2 DÍAS */}
-      {/* ═══════════════════════════════ */}
-      <SectionTitle title="Hace 2 días" />
+        <AlertRow
+          icon="alert-circle-outline"
+          title="Recordatorio"
+          description="Cita médica mañana"
+          time="08:30 AM"
+        />
 
-      <AlertRow
-        icon="people-outline"
-        title="Familia"
-        description="Nuevo miembro agregado al grupo"
-        time="06:15 PM"
-      />
+        {/* ═══════════════════════════════ */}
+        {/* SECCIÓN HACE 2 DÍAS */}
+        {/* ═══════════════════════════════ */}
+        <SectionTitle title="Hace 2 días" />
 
-      <AlertRow
-        icon="clipboard-outline"
-        title="Tarea completada"
-        description="Pago de servicios confirmado"
-        time="02:10 PM"
-      />
+        <AlertRow
+          icon="people-outline"
+          title="Familia"
+          description="Nuevo miembro agregado al grupo"
+          time="06:15 PM"
+        />
 
-      {/* ═══════════════════════════════ */}
-      {/* SECCIÓN HACE 1 SEMANA */}
-      {/* ═══════════════════════════════ */}
-      <SectionTitle title="Hace 1 semana" />
+        <AlertRow
+          icon="clipboard-outline"
+          title="Tarea completada"
+          description="Pago de servicios confirmado"
+          time="02:10 PM"
+        />
 
-      <AlertRow
-        icon="alert-circle-outline"
-        title="Alerta importante"
-        description="Actualización de políticas"
-        time="09:00 AM"
-      />
-    </ScrollView>
+        {/* ═══════════════════════════════ */}
+        {/* SECCIÓN HACE 1 SEMANA */}
+        {/* ═══════════════════════════════ */}
+        <SectionTitle title="Hace 1 semana" />
+
+        <AlertRow
+          icon="alert-circle-outline"
+          title="Alerta importante"
+          description="Actualización de políticas"
+          time="09:00 AM"
+        />
+      </ScrollView>
+    </ScreenContainer>
+
   );
 }
 

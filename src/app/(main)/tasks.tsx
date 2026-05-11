@@ -1,4 +1,5 @@
 
+import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -19,92 +20,96 @@ export default function TasksScreen() {
 
 
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
-      {/* ═══════════════════════════════ */}
-      {/* 1️⃣ BUSCADOR */}
-      {/* ═══════════════════════════════ */}
-      <TextInput
-        placeholder="Buscar tarea por nombre"
-        value={search}
-        onChangeText={setSearch}
-        left={<TextInput.Icon icon="magnify" />}
-        style={{ marginBottom: 16 }}
-      />
+    <ScreenContainer>
 
-      {/* ═══════════════════════════════ */}
-      {/* 2️⃣ FILTRO POR ESTADO */}
-      {/* ═══════════════════════════════ */}
-      <View style={{ flexDirection: "row", gap: 8, marginBottom: 16 }}>
-        {["Todos", "Pendientes", "En proceso", "Completadas"].map((status) => (
-          <Chip
-            key={status}
-            selected={statusFilter === status}
-            onPress={() => setStatusFilter(status)}
-          >
-            {status}
-          </Chip>
-        ))}
-      </View>
+      <ScrollView style={{ flex: 1 }} >
+        {/* ═══════════════════════════════ */}
+        {/* 1️⃣ BUSCADOR */}
+        {/* ═══════════════════════════════ */}
+        <TextInput
+          placeholder="Buscar tarea por nombre"
+          value={search}
+          onChangeText={setSearch}
+          left={<TextInput.Icon icon="magnify" />}
+          style={{ marginBottom: 16 }}
+        />
 
-      {/* ═══════════════════════════════ */}
-      {/* 3️⃣ FILTRO POR PRIORIDAD */}
-      {/* ═══════════════════════════════ */}
-      <View
-        style={{
-          flexDirection: "row",
-          gap: 8,
-          flexWrap: "wrap",
-          marginBottom: 24,
-        }}
-      >
-        <PriorityChip
-          label="Alta"
-          color="#D32F2F"
-          selected={priorityFilter === "Alta"}
-          onPress={() => setPriorityFilter("Alta")}
-        />
-        <PriorityChip
-          label="Media"
-          color="#FBC02D"
-          selected={priorityFilter === "Media"}
-          onPress={() => setPriorityFilter("Media")}
-        />
-        <PriorityChip
-          label="Baja"
-          color="#388E3C"
-          selected={priorityFilter === "Baja"}
-          onPress={() => setPriorityFilter("Baja")}
-        />
-        <PriorityChip
-          label="Urgente"
-          color="#F57C00"
-          selected={priorityFilter === "Urgente"}
-          onPress={() => setPriorityFilter("Urgente")}
-        />
-      </View>
+        {/* ═══════════════════════════════ */}
+        {/* 2️⃣ FILTRO POR ESTADO */}
+        {/* ═══════════════════════════════ */}
+        <View style={{ flexDirection: "row", gap: 8, marginBottom: 16 }}>
+          {["Todos", "Pendientes", "En proceso", "Completadas"].map((status) => (
+            <Chip
+              key={status}
+              selected={statusFilter === status}
+              onPress={() => setStatusFilter(status)}
+            >
+              {status}
+            </Chip>
+          ))}
+        </View>
 
-      {/* ═══════════════════════════════ */}
-      {/* 4️⃣ LISTA DE TAREAS */}
-      {/* ═══════════════════════════════ */}
-      <TaskRow
-        title="Actualizar documentos"
-        time="18:00"
-        type="Administrativa"
-        status="Pendiente"
-      />
-      <TaskRow
-        title="Cita médica"
-        time="15:30"
-        type="Salud"
-        status="En proceso"
-      />
-      <TaskRow
-        title="Pago de servicios"
-        time="12:00"
-        type="Finanzas"
-        status="Completada"
-      />
-    </ScrollView>
+        {/* ═══════════════════════════════ */}
+        {/* 3️⃣ FILTRO POR PRIORIDAD */}
+        {/* ═══════════════════════════════ */}
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 8,
+            flexWrap: "wrap",
+            marginBottom: 24,
+          }}
+        >
+          <PriorityChip
+            label="Alta"
+            color="#D32F2F"
+            selected={priorityFilter === "Alta"}
+            onPress={() => setPriorityFilter("Alta")}
+          />
+          <PriorityChip
+            label="Media"
+            color="#FBC02D"
+            selected={priorityFilter === "Media"}
+            onPress={() => setPriorityFilter("Media")}
+          />
+          <PriorityChip
+            label="Baja"
+            color="#388E3C"
+            selected={priorityFilter === "Baja"}
+            onPress={() => setPriorityFilter("Baja")}
+          />
+          <PriorityChip
+            label="Urgente"
+            color="#F57C00"
+            selected={priorityFilter === "Urgente"}
+            onPress={() => setPriorityFilter("Urgente")}
+          />
+        </View>
+
+        {/* ═══════════════════════════════ */}
+        {/* 4️⃣ LISTA DE TAREAS */}
+        {/* ═══════════════════════════════ */}
+        <TaskRow
+          title="Actualizar documentos"
+          time="18:00"
+          type="Administrativa"
+          status="Pendiente"
+        />
+        <TaskRow
+          title="Cita médica"
+          time="15:30"
+          type="Salud"
+          status="En proceso"
+        />
+        <TaskRow
+          title="Pago de servicios"
+          time="12:00"
+          type="Finanzas"
+          status="Completada"
+        />
+      </ScrollView>
+    </ScreenContainer>
+
   );
 
 }

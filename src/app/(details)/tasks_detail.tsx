@@ -1,14 +1,15 @@
+import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import {
-    Button,
-    Card,
-    Chip,
-    IconButton,
-    Text,
-    TextInput,
+  Button,
+  Card,
+  Chip,
+  IconButton,
+  Text,
+  TextInput,
 } from "react-native-paper";
 
 type Status = "Pendiente" | "En proceso" | "Completada";
@@ -34,7 +35,9 @@ export default function TaskDetailScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ padding: 16 }}>
+                <ScreenContainer>
+    
+    <ScrollView>
       {/* HEADER */}
       <View
         style={{
@@ -184,5 +187,7 @@ export default function TaskDetailScreen() {
         </Card.Content>
       </Card>
     </ScrollView>
+              </ScreenContainer>
+  
   );
 }

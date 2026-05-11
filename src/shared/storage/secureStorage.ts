@@ -14,8 +14,6 @@ export async function setItem(key: string, value: string) {
 
 export async function getItem(key: string) {
   if (Platform.OS === "web") {
-    console.log("Esta en web");
-    console.log("Locla", localStorage.getItem(WEB_PREFIX + key));
     return localStorage.getItem(WEB_PREFIX + key);
   } else {
     return await SecureStore.getItemAsync(key);

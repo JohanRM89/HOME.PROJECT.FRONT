@@ -1,11 +1,12 @@
 import { AuthUseCase } from "@/modules/auth/application/auth.usecase";
 import { AuthApi } from "@/modules/auth/infrastructure/auth.api";
+import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Pressable, View } from "react-native";
+import { Pressable } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import z from "zod";
 
@@ -63,122 +64,127 @@ export default function RegisterScreen() {
 
 
     return (
-        <View style={{ padding: 24, gap: 16 }}>
-            {/* BOTÓN VOLVER */}
-            <Pressable
-                onPress={() => router.replace("/(auth)/login")}
-                style={{ flexDirection: "row", alignItems: "center" }}
-            >
-                <Ionicons name="chevron-back" size={24} color="#6750A4" />
-                <Text style={{ color: "#6750A4", marginLeft: 4 }}>Volver</Text>
-            </Pressable>
+        <>
+            <ScreenContainer>
 
-            {/* TÍTULO */}
-            <Text variant="headlineMedium">Crear cuenta</Text>
-            <Text>Completa los datos para registrarte</Text>
+                {/* BOTÓN VOLVER */}
+                <Pressable
+                    onPress={() => router.replace("/(auth)/login")}
+                    style={{ flexDirection: "row", alignItems: "center" }}
+                >
+                    <Ionicons name="chevron-back" size={24} color="#6750A4" />
+                    <Text style={{ color: "#6750A4", marginLeft: 4 }}>Volver</Text>
+                </Pressable>
 
-            {/* NOMBRE */}
-            <Controller
-                control={control}
-                name="name"
-                render={({ field: { onChange, value } }) => (
-                    <TextInput
-                        label="Nombre completo"
-                        value={value}
-                        onChangeText={onChange}
-                        autoCapitalize="words"
-                        error={!!errors.name}
-                    />
+                {/* TÍTULO */}
+                <Text variant="headlineMedium">Crear cuenta</Text>
+                <Text>Completa los datos para registrarte</Text>
+
+                {/* NOMBRE */}
+                <Controller
+                    control={control}
+                    name="name"
+                    render={({ field: { onChange, value } }) => (
+                        <TextInput
+                            label="Nombre completo"
+                            value={value}
+                            onChangeText={onChange}
+                            autoCapitalize="words"
+                            error={!!errors.name}
+                        />
+                    )}
+                />
+                {errors.name && (
+                    <HelperText type="error" visible>
+                        {errors.name.message}
+                    </HelperText>
                 )}
-            />
-            {errors.name && (
-                <HelperText type="error" visible>
-                    {errors.name.message}
-                </HelperText>
-            )}
 
-            {/* EMAIL */}
-            <Controller
-                control={control}
-                name="email"
-                render={({ field: { onChange, value } }) => (
-                    <TextInput
-                        label="Correo electrónico"
-                        value={value}
-                        onChangeText={onChange}
-                        autoCapitalize="none"
-                        keyboardType="email-address"
-                        error={!!errors.email}
-                    />
+                {/* EMAIL */}
+                <Controller
+                    control={control}
+                    name="email"
+                    render={({ field: { onChange, value } }) => (
+                        <TextInput
+                            label="Correo electrónico"
+                            value={value}
+                            onChangeText={onChange}
+                            autoCapitalize="none"
+                            keyboardType="email-address"
+                            error={!!errors.email}
+                        />
+                    )}
+                />
+                {errors.email && (
+                    <HelperText type="error" visible>
+                        {errors.email.message}
+                    </HelperText>
                 )}
-            />
-            {errors.email && (
-                <HelperText type="error" visible>
-                    {errors.email.message}
-                </HelperText>
-            )}
 
-            {/* PASSWORD */}
-            <Controller
-                control={control}
-                name="password"
-                render={({ field: { onChange, value } }) => (
-                    <TextInput
-                        label="Contraseña"
-                        value={value}
-                        onChangeText={onChange}
-                        secureTextEntry
-                        error={!!errors.password}
-                    />
+                {/* PASSWORD */}
+                <Controller
+                    control={control}
+                    name="password"
+                    render={({ field: { onChange, value } }) => (
+                        <TextInput
+                            label="Contraseña"
+                            value={value}
+                            onChangeText={onChange}
+                            secureTextEntry
+                            error={!!errors.password}
+                        />
+                    )}
+                />
+                {errors.password && (
+                    <HelperText type="error" visible>
+                        {errors.password.message}
+                    </HelperText>
                 )}
-            />
-            {errors.password && (
-                <HelperText type="error" visible>
-                    {errors.password.message}
-                </HelperText>
-            )}
 
-            {/* CONFIRM PASSWORD */}
-            <Controller
-                control={control}
-                name="confirmPassword"
-                render={({ field: { onChange, value } }) => (
-                    <TextInput
-                        label="Confirmar contraseña"
-                        value={value}
-                        onChangeText={onChange}
-                        secureTextEntry
-                        error={!!errors.confirmPassword}
-                    />
+                {/* CONFIRM PASSWORD */}
+                <Controller
+                    control={control}
+                    name="confirmPassword"
+                    render={({ field: { onChange, value } }) => (
+                        <TextInput
+                            label="Confirmar contraseña"
+                            value={value}
+                            onChangeText={onChange}
+                            secureTextEntry
+                            error={!!errors.confirmPassword}
+                        />
+                    )}
+                />
+                {errors.confirmPassword && (
+                    <HelperText type="error" visible>
+                        {errors.confirmPassword.message}
+                    </HelperText>
                 )}
-            />
-            {errors.confirmPassword && (
-                <HelperText type="error" visible>
-                    {errors.confirmPassword.message}
-                </HelperText>
-            )}
 
-            {/* BOTÓN REGISTRAR */}
-            <Button
-                mode="contained"
-                onPress={handleSubmit(onSubmit)}
-                loading={isSubmitting}
-            >
-                Registrarse
-            </Button>
+                {/* BOTÓN REGISTRAR */}
+                <Button
+                    mode="contained"
+                    onPress={handleSubmit(onSubmit)}
+                    loading={isSubmitting}
+                >
+                    Registrarse
+                </Button>
 
-            {/* ERROR API */}
-            {apiError && (
-                <HelperText type="error" visible>
-                    {apiError}
-                </HelperText>
-            )}
-            {apiSucces && (
-                <HelperText type="info" visible>
-                    {apiSucces}
-                </HelperText>
-            )}
-        </View>
+                {/* ERROR API */}
+                {apiError && (
+                    <HelperText type="error" visible>
+                        {apiError}
+                    </HelperText>
+                )}
+                {apiSucces && (
+                    <HelperText type="info" visible>
+                        {apiSucces}
+                    </HelperText>
+                )}
+
+            </ScreenContainer>
+
+        </>
     );
 
 }

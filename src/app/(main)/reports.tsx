@@ -1,3 +1,4 @@
+import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -171,80 +172,84 @@ const styles = StyleSheet.create({
 
 export default function ReportsScreen() {
   return (
-    <View style={styles.container}>
-      {/* TÍTULO */}
-      <Text style={styles.screenTitle}>Reportes</Text>
+    <ScreenContainer>
 
-      {/* CONTENEDOR PRINCIPAL */}
-      <View style={styles.mainCard}>
-        {/* ───────────────────────────── */}
-        {/* SECCIÓN 1: RENDIMIENTO SEMANAL */}
-        {/* ───────────────────────────── */}
-        <Text style={styles.sectionTitle}>Rendimiento semanal</Text>
+      <View style={styles.container}>
+        {/* TÍTULO */}
+        <Text style={styles.screenTitle}>Reportes</Text>
 
-        <View style={styles.card}>
-          <Text style={styles.label}>Tareas completadas totales</Text>
+        {/* CONTENEDOR PRINCIPAL */}
+        <View style={styles.mainCard}>
+          {/* ───────────────────────────── */}
+          {/* SECCIÓN 1: RENDIMIENTO SEMANAL */}
+          {/* ───────────────────────────── */}
+          <Text style={styles.sectionTitle}>Rendimiento semanal</Text>
 
-          <Text style={styles.percentage}>50%</Text>
+          <View style={styles.card}>
+            <Text style={styles.label}>Tareas completadas totales</Text>
 
-          <Text style={styles.positiveIndicator}>↑ 1 de 2</Text>
+            <Text style={styles.percentage}>50%</Text>
 
-          {/* BARRA VERTICAL */}
-          <View style={styles.verticalBarContainer}>
-            <View style={styles.verticalBarTrack}>
-              <View style={styles.verticalBarFill} />
+            <Text style={styles.positiveIndicator}>↑ 1 de 2</Text>
+
+            {/* BARRA VERTICAL */}
+            <View style={styles.verticalBarContainer}>
+              <View style={styles.verticalBarTrack}>
+                <View style={styles.verticalBarFill} />
+              </View>
+              <Text style={styles.barLabel}>Johan</Text>
             </View>
-            <Text style={styles.barLabel}>Johan</Text>
           </View>
-        </View>
 
-        {/* ───────────────────────────── */}
-        {/* SECCIÓN 2: PROGRESO INDIVIDUAL */}
-        {/* ───────────────────────────── */}
-        <Text style={styles.sectionTitle}>Progreso individual</Text>
+          {/* ───────────────────────────── */}
+          {/* SECCIÓN 2: PROGRESO INDIVIDUAL */}
+          {/* ───────────────────────────── */}
+          <Text style={styles.sectionTitle}>Progreso individual</Text>
 
-        <View style={styles.card}>
-          <View style={styles.row}>
-            {/* AVATAR */}
-            <View style={styles.avatar}>
-              <Text style={styles.avatarText}>J</Text>
-            </View>
+          <View style={styles.card}>
+            <View style={styles.row}>
+              {/* AVATAR */}
+              <View style={styles.avatar}>
+                <Text style={styles.avatarText}>J</Text>
+              </View>
 
-            <View style={{ flex: 1 }}>
-              <Text style={styles.name}>Johan</Text>
-              <Text style={styles.subtitle}>
-                1 de 2 completadas 🏆 10000 pts
-              </Text>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.name}>Johan</Text>
+                <Text style={styles.subtitle}>
+                  1 de 2 completadas 🏆 10000 pts
+                </Text>
 
-              {/* BARRA HORIZONTAL */}
-              <View style={styles.progressRow}>
-                <View style={styles.horizontalBarTrack}>
-                  <View style={styles.horizontalBarFill} />
+                {/* BARRA HORIZONTAL */}
+                <View style={styles.progressRow}>
+                  <View style={styles.horizontalBarTrack}>
+                    <View style={styles.horizontalBarFill} />
+                  </View>
+                  <Text style={styles.progressText}>50%</Text>
                 </View>
-                <Text style={styles.progressText}>50%</Text>
               </View>
             </View>
           </View>
-        </View>
 
-        {/* ───────────────────────────── */}
-        {/* SECCIÓN 3: RESUMEN */}
-        {/* ───────────────────────────── */}
-        <View style={styles.summaryRow}>
-          <View style={styles.summaryItem}>
-            <Text style={styles.summaryIcon}>✅</Text>
-            <Text style={styles.summaryNumber}>1</Text>
-            <Text style={styles.summaryLabel}>Total completadas</Text>
-          </View>
+          {/* ───────────────────────────── */}
+          {/* SECCIÓN 3: RESUMEN */}
+          {/* ───────────────────────────── */}
+          <View style={styles.summaryRow}>
+            <View style={styles.summaryItem}>
+              <Text style={styles.summaryIcon}>✅</Text>
+              <Text style={styles.summaryNumber}>1</Text>
+              <Text style={styles.summaryLabel}>Total completadas</Text>
+            </View>
 
-          <View style={styles.summaryItem}>
-            <Text style={styles.summaryIcon}>⏰</Text>
-            <Text style={styles.summaryNumber}>1</Text>
-            <Text style={styles.summaryLabel}>Pendientes</Text>
+            <View style={styles.summaryItem}>
+              <Text style={styles.summaryIcon}>⏰</Text>
+              <Text style={styles.summaryNumber}>1</Text>
+              <Text style={styles.summaryLabel}>Pendientes</Text>
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </ScreenContainer>
+
   );
 }
 ``

@@ -9,7 +9,6 @@ export default function Index() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("user",user)
     if (!user) {
       router.replace("/(auth)/login");
     } else {

@@ -1,11 +1,11 @@
 import { AuthUseCase } from "@/modules/auth/application/auth.usecase";
 import { AuthApi } from "@/modules/auth/infrastructure/auth.api";
 import { useAuthStore } from "@/modules/auth/ui/auth.store";
+import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { View } from "react-native";
 import { Button, HelperText, Text, TextInput } from "react-native-paper";
 import { z } from "zod";
 
@@ -50,7 +50,7 @@ export default function LoginScreen() {
 
   return (
     <>
-      <View style={{ padding: 24, gap: 16 }}>
+      <ScreenContainer>
         <Text variant="headlineMedium">Iniciar sesión</Text>
 
         {/* EMAIL */}
@@ -122,7 +122,7 @@ export default function LoginScreen() {
               color: "#6750A4", // Material 3 primary
             }}
           >
-            Deseas registrarse 
+            Deseas registrarse
           </Text>
         </Link>
 
@@ -132,9 +132,8 @@ export default function LoginScreen() {
           <HelperText type="error" visible={!!apiError}>
             {apiError}
           </HelperText>)}
-      </View>
 
-
+      </ScreenContainer>
     </>
   );
 }

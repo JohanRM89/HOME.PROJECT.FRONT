@@ -2,174 +2,137 @@
 import { ScrollView, View } from "react-native";
 
 import {
-  Card,
-  Chip,
-  IconButton,
-  Text,
+  Text
 } from "react-native-paper";
 
-import { Ionicons } from "@expo/vector-icons";
+import { useAuthStore } from "@/modules/auth/ui/auth.store";
+import { SectionHeader } from "@/shared/components/home/SectionHeader";
+import { StatusCard } from "@/shared/components/home/StatusCard";
+import { TaskCard } from "@/shared/components/home/TaskCard";
+import { useTasks } from "@/shared/hooks/useTask";
 
 
 export default function HomeScreen() {
+
+  const user = useAuthStore((s) => s.user);
+
+  const { tasks, loading, error } = useTasks(user?.id);
+
+
+  const MAX_VISIBLE_TASKS = 3;
+  const TASK_CARD_HEIGHT = 110;
+
+  const shouldScroll = tasks.length > MAX_VISIBLE_TASKS;
   return (
     <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
-      {/* Mensaje de bienvenida para el usuario */}
-       <Text variant="headlineMedium" style={{ marginBottom: 12 }}>
-        Grupo familiar
-      </Text>
- 
 
-
-      {/* ═══════════════════════════════ */}
-      {/* ESTADOS DEL GRUPO FAMILIAR */}
-      {/* ═══════════════════════════════ */}
-      <Text variant="headlineMedium" style={{ marginBottom: 12 }}>
-        Grupo familiar
+      <Text
+        variant="headlineMedium"
+        style={{ fontWeight: "700" }}
+        numberOfLines={1}
+        ellipsizeMode="tail"
+      >
+        ¡Hola, {user?.name ?? "Usuario"}!
       </Text>
 
-      <View style={{ flexDirection: "row", gap: 12 }}>
+      <Text
+        variant="bodyMedium"
+        style={{ color: "#7A7A7A", marginTop: 4 }}
+      >
+        Tienes 5 tareas pendientes
+      </Text>
+
+
+      <View style={{ flexDirection: "row", gap: 12, marginTop: 10 }}>
         <StatusCard
           title="Pendientes"
           count={3}
-          color="#F2B705"
-          icon="time-outline"
+          color="#FEF9C3"
+          colorBorder="#FEF08A"
+          colorText="#A16207"
+        //  icon="time-outline"
         />
         <StatusCard
           title="En proceso"
           count={2}
-          color="#1E88E5"
-          icon="sync-outline"
+          color="#DBEAFE"
+          colorBorder="#BFDBFE"
+          colorText="#1D4ED8"
         />
         <StatusCard
           title="Completados"
           count={5}
-          color="#2E7D32"
-          icon="checkmark-done-outline"
+          color="#DCFCE7"
+          colorBorder="#BBF7D0"
+          colorText="#15803D"
         />
       </View>
 
-      {/* ═══════════════════════════════ */}
-      {/* 2️⃣ MIS TAREAS */}
-      {/* ═══════════════════════════════ */}
       <SectionHeader title="Mis tareas" />
 
-      <TaskCard
-        title="Actualizar documentos"
-        description="Subir documentos de identidad"
-        status="Pendiente"
-      />
-      <TaskCard
-        title="Cita médica"
-        description="Agendar cita anual"
-        status="En proceso"
-      />
-      <TaskCard
-        title="Pago de servicios"
-        description="Registrar comprobante"
-        status="Completado"
-      />
 
-      {/* ═══════════════════════════════ */}
-      {/* 3️⃣ PENDIENTES DEL GRUPO */}
-      {/* ═══════════════════════════════ */}
+      {loading && <Text>Cargando tareas...</Text>}
+
+      {error && <Text>{error}</Text>}
+
+      {!loading && tasks.length === 0 && (
+        <Text>No tienes tareas asignadas</Text>
+      )}
+
+
+      <View
+        style={{
+          maxHeight: TASK_CARD_HEIGHT * MAX_VISIBLE_TASKS,
+        }}
+      >
+        <ScrollView
+          scrollEnabled={shouldScroll}
+          showsVerticalScrollIndicator={shouldScroll}
+        >
+          {tasks.map((task) => (
+            <TaskCard
+              key={task.id}
+              title={task.title}
+              description={task.description}
+              status="Pendiente"
+            />
+          ))}
+        </ScrollView>
+      </View>
       <SectionHeader title="Pendientes familiares" />
 
-      <TaskCard
-        title="Actualización escolar"
-        description="Subir boletín académico"
-        status="Pendiente"
-      />
-      <TaskCard
-        title="Vacunación"
-        description="Confirmar esquema"
-        status="En proceso"
-      />
-      <TaskCard
-        title="Revisión anual"
-        description="Completar formulario"
-        status="Pendiente"
-      />
+
+      {loading && <Text>Cargando tareas...</Text>}
+
+      {error && <Text>{error}</Text>}
+
+      {!loading && tasks.length === 0 && (
+        <Text>No tienes tareas asignadas</Text>
+      )}
+
+
+      <View
+        style={{
+          maxHeight: TASK_CARD_HEIGHT * MAX_VISIBLE_TASKS,
+        }}
+      >
+        <ScrollView
+          scrollEnabled={shouldScroll}
+          showsVerticalScrollIndicator={shouldScroll}
+        >
+          {tasks.map((task) => (
+            <TaskCard
+              key={task.id}
+              title={task.title}
+              description={task.description}
+              status="Pendiente"
+            />
+          ))}
+        </ScrollView>
+      </View>
+
     </ScrollView>
   );
 }
 
-/* ═══════════════════════════════ */
-/* COMPONENTES REUTILIZABLES */
-/* ═══════════════════════════════ */
 
-function StatusCard({
-  title,
-  count,
-  color,
-  icon,
-}: {
-  title: string;
-  count: number;
-  color: string;
-  icon: string;
-}) {
-  return (
-    <Card style={{ flex: 1 }}>
-      <Card.Content style={{ alignItems: "center", gap: 8 }}>
-        <Ionicons name={icon as any} size={28} color={color} />
-        <Text variant="titleLarge">{count}</Text>
-        <Text>{title}</Text>
-      </Card.Content>
-    </Card>
-  );
-}
-
-function SectionHeader({ title }: { title: string }) {
-  return (
-    <View
-      style={{
-        marginTop: 24,
-        marginBottom: 8,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}
-    >
-      <Text variant="titleLarge">{title}</Text>
-      <IconButton
-        icon="chevron-right"
-        size={22}
-        onPress={() => console.log("Ver todo")}
-      />
-    </View>
-  );
-}
-
-function TaskCard({
-  title,
-  description,
-  status,
-}: {
-  title: string;
-  description: string;
-  status: "Pendiente" | "En proceso" | "Completado";
-}) {
-  const statusColor =
-    status === "Pendiente"
-      ? "#F2B705"
-      : status === "En proceso"
-        ? "#1E88E5"
-        : "#2E7D32";
-
-  return (
-    <Card style={{ marginBottom: 12 }}>
-      <Card.Content style={{ flexDirection: "row", gap: 12 }}>
-        <Ionicons name="clipboard-outline" size={28} color={statusColor} />
-        <View style={{ flex: 1 }}>
-          <Text variant="titleMedium">{title}</Text>
-          <Text variant="bodyMedium">{description}</Text>
-
-          <View style={{ marginTop: 6, alignSelf: "flex-start" }}>
-            <Chip>{status}</Chip>
-          </View>
-        </View>
-      </Card.Content>
-    </Card>
-  );
-}

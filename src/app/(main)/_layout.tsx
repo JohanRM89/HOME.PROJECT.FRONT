@@ -9,7 +9,7 @@ export default function MainLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: "#6750A4", // Material 3 primary
+        tabBarActiveTintColor: "#EC5B13", // Material 3 primary
         tabBarInactiveTintColor: "#7d7d7d",
       }}
     >
