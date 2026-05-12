@@ -1,12 +1,17 @@
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
+import { useDetailsTasks } from "@/shared/hooks/useDetailsTasks";
 import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Image, Pressable, ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native-paper";
 export default function TaskDetailScreen() {
   const [showNoteInput, setShowNoteInput] = useState(false);
   const [note, setNote] = useState("");
+  const { taskId } = useLocalSearchParams<{ taskId: string }>();
+  const { task_details, loading_group, error_group } = useDetailsTasks(taskId);
+  console.log("tas", task_details)
+
   return (
     <ScreenContainer noPadding>
       <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
@@ -22,7 +27,7 @@ export default function TaskDetailScreen() {
             borderBottomColor: "#F1F5F9",
           }}
         >
-          <TouchableOpacity onPress={() => router.back()}>
+          <TouchableOpacity onPress={() => router.replace("/(main)/tasks")}>
             <Ionicons name="arrow-back" size={24} color="#111827" />
           </TouchableOpacity>
 
@@ -41,20 +46,54 @@ export default function TaskDetailScreen() {
             paddingBottom: 130,
           }}
         >
-          <View
-            style={{
-              alignSelf: "flex-start",
-              backgroundColor: "#FFECE5",
-              paddingHorizontal: 12,
-              paddingVertical: 6,
-              borderRadius: 999,
-              marginBottom: 14,
-            }}
-          >
-            <Text style={{ color: "#FA541C", fontWeight: "900", fontSize: 12 }}>
-              PRIORIDAD ALTA
-            </Text>
-          </View>
+
+          {task_details?.priority === "low" ? (<>
+            <View
+              style={{
+                alignSelf: "flex-start",
+                backgroundColor: "#FFECE5",
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+                borderRadius: 999,
+                marginBottom: 14,
+              }}
+            >
+              <Text style={{ color: "#FA541C", fontWeight: "900", fontSize: 12 }}>
+                PRIORIDAD BAJA
+              </Text>
+            </View>
+          </>) : task_details?.priority === "hight" ? (<>
+            <View
+              style={{
+                alignSelf: "flex-start",
+                backgroundColor: "#FFECE5",
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+                borderRadius: 999,
+                marginBottom: 14,
+              }}
+            >
+              <Text style={{ color: "#FA541C", fontWeight: "900", fontSize: 12 }}>
+                PRIORIDAD ALTA
+              </Text>
+            </View>
+          </>) : (<>
+            <View
+              style={{
+                alignSelf: "flex-start",
+                backgroundColor: "#FFECE5",
+                paddingHorizontal: 12,
+                paddingVertical: 6,
+                borderRadius: 999,
+                marginBottom: 14,
+              }}
+            >
+              <Text style={{ color: "#FA541C", fontWeight: "900", fontSize: 12 }}>
+                PRIORIDAD MEDIA
+              </Text>
+            </View>
+          </>)}
+
 
           <Text
             style={{
@@ -66,11 +105,12 @@ export default function TaskDetailScreen() {
               marginBottom: 28,
             }}
           >
-            Limpieza profunda de la cocina
+            {task_details?.title}
           </Text>
 
           <SectionTitle title="ESTADO ACTUAL" />
 
+          {/* Dependiendo del estado mostrar en cual va y poder dar click al siguiente y no hacia atras */}
           <View
             style={{
               flexDirection: "row",
@@ -80,22 +120,22 @@ export default function TaskDetailScreen() {
               marginBottom: 34,
             }}
           >
-            <StatusOption active icon="time-outline" label="PENDIENTE" />
-            <StatusOption icon="sync-outline" label="EN PROCESO" />
-            <StatusOption icon="checkmark-circle-outline" label="COMPLETADA" />
+            <StatusOption active={task_details?.status === "pending"} icon="time-outline" label="PENDIENTE" />
+            <StatusOption active={task_details?.status === "in_progress"} icon="sync-outline" label="EN PROCESO" />
+            <StatusOption active={task_details?.status === "completed"} icon="checkmark-circle-outline" label="COMPLETADA" />
           </View>
 
           <View style={{ flexDirection: "row", gap: 16, marginBottom: 34 }}>
             <InfoCard
               iconType="avatar"
               label="RESPONSABLE"
-              value="Carlos Ruiz"
+              value={task_details?.assigned_to_name}
             />
 
             <InfoCard
               icon="calendar-outline"
               label="VENCIMIENTO"
-              value="Hoy, 18:00"
+              value={task_details?.due_date}
             />
           </View>
 
@@ -118,10 +158,8 @@ export default function TaskDetailScreen() {
               marginBottom: 34,
             }}
           >
-            Limpieza exhaustiva de todas las superficies, incluyendo el interior
-            del horno, campana extractora y organización de la despensa. Es
-            necesario revisar las fechas de caducidad de los productos
-            almacenados.
+            {task_details?.description}
+ 
           </Text>
 
           <View
@@ -317,7 +355,7 @@ function InfoCard({
   iconType,
 }: {
   label: string;
-  value: string;
+  value?: string;
   icon?: keyof typeof Ionicons.glyphMap;
   iconType?: "avatar";
 }) {

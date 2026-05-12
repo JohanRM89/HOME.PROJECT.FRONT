@@ -11,7 +11,8 @@ export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   token: null,
   expiresAt: null,
-  isHydrated: null,
+  isHydrated: false,
+  memberid: null,
 
   login: async (data) => {
     // 1️ Guardar de forma segura
@@ -22,6 +23,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       token: data.token,
       expiresAt: data.expiresAt,
       isHydrated: true,
+      memberid: data.memberid,
     });
   },
 
@@ -32,6 +34,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       token: null,
       expiresAt: null,
       isHydrated: true,
+      memberid: null,
     });
   },
 
@@ -41,6 +44,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         user: data.user,
         token: data.token,
         expiresAt: data.expiresAt,
+        memberid: data.memberid,
         isHydrated: true,
       });
     } else {
@@ -48,6 +52,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         user: null,
         token: null,
         expiresAt: null,
+        memberid: null,
         isHydrated: true,
       });
     }

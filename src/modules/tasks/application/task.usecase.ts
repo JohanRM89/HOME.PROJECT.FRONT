@@ -30,4 +30,17 @@ export class TaskUseCase {
       throw new Error(apiMessage);
     }
   }
+  async getTaskDetail(idTask: string) {
+    try {
+      const list = await this.repository.getDetailsTask(idTask);
+      return list.data;
+    } catch (error: any) {
+      const apiMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Error al cargar las tareas de la familia";
+
+      throw new Error(apiMessage);
+    }
+  }
 }

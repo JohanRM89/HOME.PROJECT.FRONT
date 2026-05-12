@@ -9,7 +9,7 @@ export function TaskCard({
 }: {
     title: string;
     description: string;
-    status: "Pendiente" | "En proceso" | "Completado";
+    status: "Pendiente" | "En proceso" | "Completada";
 }) {
     const statusConfig = {
         Pendiente: {
@@ -22,7 +22,7 @@ export function TaskCard({
             bg: "#DBEAFE",
             icon: "#3B82F6",
         },
-        Completado: {
+        Completada: {
             color: "#15803D",
             bg: "#DCFCE7",
             icon: "#22C55E",

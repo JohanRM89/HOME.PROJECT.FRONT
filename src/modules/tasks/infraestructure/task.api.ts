@@ -1,5 +1,9 @@
 import { httpClient } from "@/shared/api/httpClients";
-import { ResponseDataListaTareas } from "../domain/ITaskRepository";
+import {
+    ResponseDataListaTareas,
+    ResponseMessageData,
+    ResponseTareas,
+} from "../domain/ITaskRepository";
 import { TaskRepository } from "../domain/TaskRepository";
 
 export class TaskApi implements TaskRepository {
@@ -13,6 +17,14 @@ export class TaskApi implements TaskRepository {
     const { data } = await httpClient.get("/tasks", {
       params: { groupId: groupId },
     });
+    return data;
+  }
+  async getDetailsTask(groupId: string): Promise<ResponseTareas> {
+    const { data } = await httpClient.get(`/tasks/obtenerById/${groupId}`);
+    return data;
+  }
+  async getCommentsByTask(task_id: string): Promise<ResponseMessageData> {
+    const { data } = await httpClient.get(`/tasks/comments/task/${task_id}`);
     return data;
   }
 }

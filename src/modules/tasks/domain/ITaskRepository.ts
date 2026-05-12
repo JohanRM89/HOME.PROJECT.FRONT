@@ -28,6 +28,23 @@ export interface ResponseDataListaTareas {
     totalPages: number;
   };
 }
+export interface ResponseTareas {
+  data: DataListaTareas;
+  message: string;
+  ok: boolean;
+}
+export interface ResponseMessageData {
+  data: MessageData[];
+  message: string;
+  ok: boolean;
+}
+export interface MessageData {
+  id: string;
+  task_id: string;
+  user_id: string;
+  content: string;
+  created_at: string;
+}
 export interface DataListaTareas {
   id: string;
   title: string;

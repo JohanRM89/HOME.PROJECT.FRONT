@@ -2,14 +2,17 @@
 
 export interface AuthState {
   user: User | null;
+
   token: string | null;
   expiresAt: string | null;
-  isHydrated: boolean | null;
+  isHydrated: boolean;
+  memberid: string | null;
 
   login: (data: {
     user: User;
     token: string;
     expiresAt: string;
+    memberid: string | null;
   }) => Promise<void>;
 
   logout: () => Promise<void>;
@@ -19,6 +22,7 @@ export interface AuthState {
       user: User;
       token: string;
       expiresAt: string;
+      memberid: string | null;
     } | null,
   ) => void;
 }
@@ -32,6 +36,7 @@ export interface ResponseLogin {
   token: string;
   expiresAt: string;
   user: User;
+  memberid: string;
 }
 
 interface User {

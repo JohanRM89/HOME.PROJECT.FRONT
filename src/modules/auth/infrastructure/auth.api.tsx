@@ -49,6 +49,7 @@ export class AuthApi implements AuthRepository {
       expiresAt: data.data.expiresAt,
       token: data.data.token,
       user: data.data.user,
+      memberid:data.data.memberid
     };
   }
 

@@ -10,14 +10,17 @@ import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
 import { SectionHeader } from "@/shared/components/home/SectionHeader";
 import { StatusCard } from "@/shared/components/home/StatusCard";
 import { TaskCard } from "@/shared/components/home/TaskCard";
+import { useTasksGroups } from "@/shared/hooks/useTaksGroups";
 import { useTasks } from "@/shared/hooks/useTask";
 
 
 export default function HomeScreen() {
 
   const user = useAuthStore((s) => s.user);
+  const memberid = useAuthStore((s) => s.memberid);
 
   const { tasks, loading, error } = useTasks(user?.id);
+  const { tasks_group, loading_group, error_group } = useTasksGroups(memberid);
 
 
   const MAX_VISIBLE_TASKS = 3;
@@ -31,11 +34,7 @@ export default function HomeScreen() {
           flex: 1,
           backgroundColor: "#FAFAFA",
         }}
-        // contentContainerStyle={{
-        //   paddingHorizontal: 20,
-        //   paddingTop: 28,
-        //   paddingBottom: 120,
-        // }}
+
         showsVerticalScrollIndicator={false}
       >
         {/* HEADER */}
@@ -106,8 +105,9 @@ export default function HomeScreen() {
               key={task.id}
               title={task.title}
               description={task.description}
-              status="Pendiente"
+              status={task.status === "pending" ? "Pendiente" : task.status === "in_progress" ? "En proceso" : "Completada"}
             />
+
           ))}
         </View>
 
@@ -116,12 +116,12 @@ export default function HomeScreen() {
         <SectionHeader title="Pendientes familia" />
 
         <View style={{ gap: 14 }}>
-          {tasks.map((task) => (
+          {tasks_group.map((task) => (
             <TaskCard
               key={`family-${task.id}`}
               title={task.title}
               description={task.description}
-              status="En proceso"
+              status={task.status === "pending" ? "Pendiente" : task.status === "in_progress" ? "En proceso" : "Completada"}
             />
           ))}
         </View>

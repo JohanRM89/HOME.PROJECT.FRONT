@@ -1,6 +1,8 @@
+import { useAuthStore } from "@/modules/auth/ui/auth.store";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
 import { PriorityFilter } from "@/shared/components/tasks/PriorityFilter";
 import { TaskRow } from "@/shared/components/tasks/TaskRow";
+import { useTasks } from "@/shared/hooks/useTask";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -12,6 +14,8 @@ const STATUS = ["Todos", "Pendiente", "En proceso", "Completada"];
 export default function TasksScreen() {
   const [statusFilter, setStatusFilter] = useState("Todos");
   const [search, setSearch] = useState("");
+  const user = useAuthStore((s) => s.user);
+  const { tasks, loading, error } = useTasks(user?.id);
 
   return (
     <ScreenContainer>
@@ -33,8 +37,8 @@ export default function TasksScreen() {
               marginBottom: 14,
             }}
           >
-            <Ionicons name="search-outline" size={22} color="#94A3B8" 
-            
+            <Ionicons name="search-outline" size={22} color="#94A3B8"
+
             />
 
             <TextInput
@@ -108,16 +112,29 @@ export default function TasksScreen() {
           </View>
 
           {/* Tasks */}
+
+
           <View style={{ gap: 14 }}>
-            <TaskRow
-              title="Limpiar el jardín frontal"
-              date="HOY, 14:00"
-              tag="EXTERIOR"
-              status="Pendiente"
-                onPress={() => router.push("/(details)/tasks_detail")}
 
-            />
+            {tasks.map((task) => (
+              <TaskRow
+                key={task.id}
+                title={task.title}
+                date={task.due_date}
+                status={task.status === "pending" ? "Pendiente" : task.status === "in_progress" ? "En proceso" : "Completada"}
+                onPress={() =>
 
+                  router.push({
+                    pathname: "/(details)/tasks_detail",
+                    params: { taskId: task.id },
+                  })
+
+                }
+
+              />
+            ))}
+
+            {/* 
             <TaskRow
               title="Pagar factura de luz"
               date="COMPLETADA"
@@ -137,7 +154,7 @@ export default function TasksScreen() {
               date="EN PROCESO"
               status="En proceso"
               highlighted
-            />
+            /> */}
           </View>
         </ScrollView>
 
