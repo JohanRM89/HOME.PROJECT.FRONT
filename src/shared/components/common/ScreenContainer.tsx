@@ -1,25 +1,25 @@
 import { ReactNode } from "react";
-import { View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface ScreenContainerProps {
   children: ReactNode;
+  noPadding?: boolean;
 }
 
-export function ScreenContainer({ children }: ScreenContainerProps) {
-  const insets = useSafeAreaInsets();
-
+export function ScreenContainer({
+  children,
+  noPadding = false,
+}: ScreenContainerProps) {
   return (
-    <View
+    <SafeAreaView
+      edges={["top"]}
       style={{
         flex: 1,
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-        paddingLeft: 16,
-        paddingRight: 16,
+        backgroundColor: "#FAFAFA",
+        paddingHorizontal: noPadding ? 0 : 20,
       }}
     >
       {children}
-    </View>
+    </SafeAreaView>
   );
 }

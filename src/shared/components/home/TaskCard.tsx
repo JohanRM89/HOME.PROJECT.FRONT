@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
-import { Card, Chip, Text } from "react-native-paper";
+import { Text } from "react-native-paper";
 
 export function TaskCard({
     title,
@@ -11,26 +11,111 @@ export function TaskCard({
     description: string;
     status: "Pendiente" | "En proceso" | "Completado";
 }) {
-    const statusColor =
-        status === "Pendiente"
-            ? "#F2B705"
-            : status === "En proceso"
-                ? "#1E88E5"
-                : "#2E7D32";
+    const statusConfig = {
+        Pendiente: {
+            color: "#A16207",
+            bg: "#FEF3C7",
+            icon: "#F59E0B",
+        },
+        "En proceso": {
+            color: "#1D4ED8",
+            bg: "#DBEAFE",
+            icon: "#3B82F6",
+        },
+        Completado: {
+            color: "#15803D",
+            bg: "#DCFCE7",
+            icon: "#22C55E",
+        },
+    };
+
+    const config = statusConfig[status];
 
     return (
-        <Card style={{ marginBottom: 12 }}>
-            <Card.Content style={{ flexDirection: "row", gap: 12 }}>
-                <Ionicons name="clipboard-outline" size={28} color={statusColor} />
-                <View style={{ flex: 1 }}>
-                    <Text variant="titleMedium">{title}</Text>
-                    <Text variant="bodyMedium">{description}</Text>
+        <View
+            style={{
+                backgroundColor: "#FFFFFF",
+                borderRadius: 24,
+                padding: 16,
+                flexDirection: "row",
+                alignItems: "center",
 
-                    <View style={{ marginTop: 6, alignSelf: "flex-start" }}>
-                        <Chip>{status}</Chip>
-                    </View>
-                </View>
-            </Card.Content>
-        </Card>
+                shadowColor: "#000",
+                shadowOpacity: 0.03,
+                shadowRadius: 10,
+                shadowOffset: {
+                    width: 0,
+                    height: 4,
+                },
+
+                elevation: 1,
+            }}
+        >
+            {/* ICON */}
+
+            <View
+                style={{
+                    width: 58,
+                    height: 58,
+                    borderRadius: 18,
+                    backgroundColor: config.bg,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginRight: 14,
+                }}
+            >
+                <Ionicons
+                    name="clipboard-outline"
+                    size={26}
+                    color={config.icon}
+                />
+            </View>
+
+            {/* CONTENT */}
+
+            <View style={{ flex: 1 }}>
+                <Text
+                    style={{
+                        fontSize: 20,
+                        fontWeight: "700",
+                        color: "#0F172A",
+                    }}
+                >
+                    {title}
+                </Text>
+
+                <Text
+                    style={{
+                        marginTop: 2,
+                        fontSize: 14,
+                        color: "#94A3B8",
+                        fontWeight: "500",
+                    }}
+                >
+                    {description}
+                </Text>
+            </View>
+
+            {/* BADGE */}
+
+            <View
+                style={{
+                    backgroundColor: config.bg,
+                    paddingHorizontal: 12,
+                    paddingVertical: 8,
+                    borderRadius: 12,
+                }}
+            >
+                <Text
+                    style={{
+                        color: config.color,
+                        fontWeight: "700",
+                        fontSize: 12,
+                    }}
+                >
+                    {status.toUpperCase()}
+                </Text>
+            </View>
+        </View>
     );
 }

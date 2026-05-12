@@ -1,37 +1,41 @@
-import { SectionHeaderProps } from "@/modules/tasks/domain/ITaskRepository";
 import { View } from "react-native";
-import { IconButton, Text } from "react-native-paper";
-
+import { Text } from "react-native-paper";
 
 export function SectionHeader({
     title,
-    onPress,
-}: SectionHeaderProps) {
+}: {
+    title: string;
+}) {
     return (
         <View
             style={{
-                marginTop: 24,
-                marginBottom: 8,
+                marginTop: 34,
+                marginBottom: 18,
                 flexDirection: "row",
-                alignItems: "center",
                 justifyContent: "space-between",
+                alignItems: "center",
             }}
         >
-            <Text variant="headlineMedium"
-                style={{ fontWeight: "100" }}
-                numberOfLines={1}
-                ellipsizeMode="tail"
+            <Text
+                style={{
+                    fontSize: 30,
+                    fontWeight: "800",
+                    color: "#111827",
+                    letterSpacing: -1,
+                }}
+            >
+                {title}
+            </Text>
 
-
-            >{title}</Text>
-            {onPress && (
-                <IconButton
-                    icon="chevron-right"
-                    size={22}
-                    onPress={onPress}
-                />
-            )}
+            <Text
+                style={{
+                    color: "#F97316",
+                    fontWeight: "700",
+                    fontSize: 16,
+                }}
+            >
+                Ver todo
+            </Text>
         </View>
     );
-
 }

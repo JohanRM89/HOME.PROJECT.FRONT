@@ -6,6 +6,7 @@ import {
 } from "react-native-paper";
 
 import { useAuthStore } from "@/modules/auth/ui/auth.store";
+import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
 import { SectionHeader } from "@/shared/components/home/SectionHeader";
 import { StatusCard } from "@/shared/components/home/StatusCard";
 import { TaskCard } from "@/shared/components/home/TaskCard";
@@ -24,71 +25,82 @@ export default function HomeScreen() {
 
   const shouldScroll = tasks.length > MAX_VISIBLE_TASKS;
   return (
-    <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 16 }}>
-
-      <Text
-        variant="headlineMedium"
-        style={{ fontWeight: "700" }}
-        numberOfLines={1}
-        ellipsizeMode="tail"
-      >
-        ¡Hola, {user?.name ?? "Usuario"}!
-      </Text>
-
-      <Text
-        variant="bodyMedium"
-        style={{ color: "#7A7A7A", marginTop: 4 }}
-      >
-        Tienes 5 tareas pendientes
-      </Text>
-
-
-      <View style={{ flexDirection: "row", gap: 12, marginTop: 10 }}>
-        <StatusCard
-          title="Pendientes"
-          count={3}
-          color="#FEF9C3"
-          colorBorder="#FEF08A"
-          colorText="#A16207"
-        //  icon="time-outline"
-        />
-        <StatusCard
-          title="En proceso"
-          count={2}
-          color="#DBEAFE"
-          colorBorder="#BFDBFE"
-          colorText="#1D4ED8"
-        />
-        <StatusCard
-          title="Completados"
-          count={5}
-          color="#DCFCE7"
-          colorBorder="#BBF7D0"
-          colorText="#15803D"
-        />
-      </View>
-
-      <SectionHeader title="Mis tareas" />
-
-
-      {loading && <Text>Cargando tareas...</Text>}
-
-      {error && <Text>{error}</Text>}
-
-      {!loading && tasks.length === 0 && (
-        <Text>No tienes tareas asignadas</Text>
-      )}
-
-
-      <View
+    <ScreenContainer>
+      <ScrollView
         style={{
-          maxHeight: TASK_CARD_HEIGHT * MAX_VISIBLE_TASKS,
+          flex: 1,
+          backgroundColor: "#FAFAFA",
         }}
+        // contentContainerStyle={{
+        //   paddingHorizontal: 20,
+        //   paddingTop: 28,
+        //   paddingBottom: 120,
+        // }}
+        showsVerticalScrollIndicator={false}
       >
+        {/* HEADER */}
+
+        <View style={{ marginBottom: 28 }}>
+          <Text
+            style={{
+              fontSize: 38,
+              fontWeight: "800",
+              color: "#111827",
+              letterSpacing: -1,
+            }}
+          >
+            ¡Hola, {user?.name ?? "Ana"}!
+          </Text>
+
+          <Text
+            style={{
+              marginTop: 6,
+              fontSize: 16,
+              color: "#94A3B8",
+              fontWeight: "500",
+            }}
+          >
+            Tienes 5 tareas para hoy
+          </Text>
+        </View>
+
+        {/* STATUS CARDS */}
+
         <ScrollView
-          scrollEnabled={shouldScroll}
-          showsVerticalScrollIndicator={shouldScroll}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            gap: 14,
+            paddingRight: 20,
+          }}
         >
+          <StatusCard
+            title="Pendientes"
+            count={5}
+            color="#FFF7CC"
+            colorText="#A16207"
+          />
+
+          <StatusCard
+            title="En proceso"
+            count={2}
+            color="#DDEBFF"
+            colorText="#1D4ED8"
+          />
+
+          <StatusCard
+            title="Completadas"
+            count={8}
+            color="#DCFCE7"
+            colorText="#15803D"
+          />
+        </ScrollView>
+
+        {/* TASKS */}
+
+        <SectionHeader title="Mis tareas hoy" />
+
+        <View style={{ gap: 14 }}>
           {tasks.map((task) => (
             <TaskCard
               key={task.id}
@@ -97,41 +109,26 @@ export default function HomeScreen() {
               status="Pendiente"
             />
           ))}
-        </ScrollView>
-      </View>
-      <SectionHeader title="Pendientes familiares" />
+        </View>
 
+        {/* FAMILY */}
 
-      {loading && <Text>Cargando tareas...</Text>}
+        <SectionHeader title="Pendientes familia" />
 
-      {error && <Text>{error}</Text>}
-
-      {!loading && tasks.length === 0 && (
-        <Text>No tienes tareas asignadas</Text>
-      )}
-
-
-      <View
-        style={{
-          maxHeight: TASK_CARD_HEIGHT * MAX_VISIBLE_TASKS,
-        }}
-      >
-        <ScrollView
-          scrollEnabled={shouldScroll}
-          showsVerticalScrollIndicator={shouldScroll}
-        >
+        <View style={{ gap: 14 }}>
           {tasks.map((task) => (
             <TaskCard
-              key={task.id}
+              key={`family-${task.id}`}
               title={task.title}
               description={task.description}
-              status="Pendiente"
+              status="En proceso"
             />
           ))}
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
 
-    </ScrollView>
+    </ScreenContainer>
+
   );
 }
 

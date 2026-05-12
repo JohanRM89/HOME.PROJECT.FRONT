@@ -1,274 +1,223 @@
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import React from "react";
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-
-/* ───────────────────────── */
-/* DATA DE MENÚ */
-/* ───────────────────────── */
-const settingsOptions = [
-  {
-    id: "notifications",
-    title: "Notificaciones",
-    icon: "notifications-outline",
-  },
-  {
-    id: "security",
-    title: "Seguridad",
-    icon: "shield-checkmark-outline",
-  },
-  {
-    id: "language",
-    title: "Idioma",
-    icon: "globe-outline",
-    subtitle: "Español",
-  },
-];
+import { router } from "expo-router";
+import { Image, ScrollView, TouchableOpacity, View } from "react-native";
+import { Text } from "react-native-paper";
 
 export default function ProfileScreen() {
-  const router = useRouter();
-
   return (
-    <ScreenContainer>
-
-      <View style={styles.container}>
-        {/* ───────────────────────── */}
-        {/* HEADER */}
-        {/* ───────────────────────── */}
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="chevron-back" size={24} color="#000" />
+    <ScreenContainer noPadding>
+      <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
+        <View
+          style={{
+            height: 68,
+            backgroundColor: "#FFFFFF",
+            paddingHorizontal: 20,
+            borderBottomWidth: 1,
+            borderBottomColor: "#F1F5F9",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={{ position: "absolute", left: 20 }}
+          >
+            <Ionicons name="arrow-back" size={24} color="#111827" />
           </TouchableOpacity>
 
-          <Text style={styles.headerTitle}>Perfil</Text>
-
-          {/* Espacio para centrar el título */}
-          <View style={{ width: 24 }} />
-        </View>
-
-        {/* ───────────────────────── */}
-        {/* PERFIL USUARIO */}
-        {/* ───────────────────────── */}
-        <View style={styles.profileSection}>
-          <View style={styles.avatarWrapper}>
-            <Image
-              source={{
-                uri: "https://ui-avatars.com/api/?name=Alejandro+Garcia",
-              }}
-              style={styles.avatar}
-            />
-
-            {/* BOTÓN EDITAR */}
-            <TouchableOpacity style={styles.editAvatarButton}>
-              <Ionicons name="pencil" size={16} color="#FFF" />
-            </TouchableOpacity>
-          </View>
-
-          <Text style={styles.name}>Alejandro García</Text>
-          <Text style={styles.email}>
-            alejandro.garcia@hometask.com
+          <Text style={{ fontSize: 20, fontWeight: "900", color: "#111827" }}>
+            Perfil
           </Text>
         </View>
 
-        {/* ───────────────────────── */}
-        {/* CONFIGURACIÓN */}
-        {/* ───────────────────────── */}
-        <Text style={styles.sectionTitle}>Configuración</Text>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingHorizontal: 24,
+            paddingTop: 32,
+            paddingBottom: 120,
+          }}
+        >
+          <View style={{ alignItems: "center", marginBottom: 42 }}>
+            <View style={{ position: "relative" }}>
+              <Image
+                source={{ uri: "https://i.pravatar.cc/200?img=12" }}
+                style={{
+                  width: 128,
+                  height: 128,
+                  borderRadius: 999,
+                  borderWidth: 4,
+                  borderColor: "#FED7C3",
+                }}
+              />
 
-        <FlatList
-          data={settingsOptions}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <MenuItem
-              icon={item.icon}
-              title={item.title}
-              subtitle={item.subtitle}
+              <TouchableOpacity
+                activeOpacity={0.85}
+                style={{
+                  position: "absolute",
+                  right: 2,
+                  bottom: 8,
+                  width: 32,
+                  height: 32,
+                  borderRadius: 999,
+                  backgroundColor: "#FA541C",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderWidth: 3,
+                  borderColor: "#FAFAFA",
+                }}
+              >
+                <Ionicons name="pencil" size={15} color="#FFFFFF" />
+              </TouchableOpacity>
+            </View>
+
+            <Text
+              style={{
+                marginTop: 18,
+                fontSize: 25,
+                fontWeight: "900",
+                color: "#111827",
+                textAlign: "center",
+              }}
+            >
+              Alejandro García
+            </Text>
+
+            <Text
+              style={{
+                marginTop: 4,
+                fontSize: 16,
+                color: "#FA541C",
+                fontWeight: "600",
+              }}
+            >
+              alejandro.garcia@hometask.com
+            </Text>
+          </View>
+
+          <SectionTitle title="Configuración" />
+
+          <View style={{ gap: 4, marginBottom: 30 }}>
+            <ProfileOption
+              icon="notifications-outline"
+              title="Notificaciones"
             />
-          )}
-        />
 
-        {/* ───────────────────────── */}
-        {/* CUENTA */}
-        {/* ───────────────────────── */}
-        <Text style={styles.sectionTitle}>Cuenta</Text>
+            <ProfileOption
+              icon="shield-outline"
+              title="Seguridad"
+            />
 
-        <MenuItem
-          icon="log-out-outline"
-          title="Cerrar sesión"
-          danger
-          onPress={() => console.log("Logout")}
-        />
+            <ProfileOption
+              icon="globe-outline"
+              title="Idioma"
+              subtitle="Español"
+            />
+          </View>
+
+          <SectionTitle title="Cuenta" />
+
+          <View style={{ gap: 4 }}>
+            <ProfileOption
+              icon="log-out-outline"
+              title="Cerrar sesión"
+              danger
+              hideChevron
+            />
+          </View>
+        </ScrollView>
       </View>
     </ScreenContainer>
-
   );
 }
 
-/* ───────────────────────── */
-/* COMPONENTE MENU ITEM */
-/* ───────────────────────── */
-function MenuItem({
+function SectionTitle({ title }: { title: string }) {
+  return (
+    <Text
+      style={{
+        fontSize: 21,
+        fontWeight: "900",
+        color: "#111827",
+        marginBottom: 14,
+      }}
+    >
+      {title}
+    </Text>
+  );
+}
+
+function ProfileOption({
   icon,
   title,
   subtitle,
-  onPress,
   danger = false,
+  hideChevron = false,
 }: {
-  icon: string;
+  icon: keyof typeof Ionicons.glyphMap;
   title: string;
   subtitle?: string;
-  onPress?: () => void;
   danger?: boolean;
+  hideChevron?: boolean;
 }) {
   return (
     <TouchableOpacity
-      style={styles.menuItem}
-      onPress={onPress}
-      activeOpacity={0.7}
+      activeOpacity={0.85}
+      style={{
+        minHeight: 72,
+        backgroundColor: "#FFFFFF",
+        borderRadius: 12,
+        paddingHorizontal: 16,
+        flexDirection: "row",
+        alignItems: "center",
+      }}
     >
-      <View style={styles.menuLeft}>
+      <View
+        style={{
+          width: 42,
+          height: 42,
+          borderRadius: 10,
+          backgroundColor: "#FFF1E8",
+          justifyContent: "center",
+          alignItems: "center",
+          marginRight: 16,
+        }}
+      >
         <Ionicons
-          name={icon as any}
+          name={icon}
           size={22}
-          color={danger ? "#FF6B35" : "#555"}
+          color={danger ? "#EF4444" : "#FA541C"}
         />
-
-        <View style={{ marginLeft: 12 }}>
-          <Text
-            style={[
-              styles.menuTitle,
-              danger && { color: "#FF6B35" },
-            ]}
-          >
-            {title}
-          </Text>
-
-          {subtitle && (
-            <Text style={styles.menuSubtitle}>{subtitle}</Text>
-          )}
-        </View>
       </View>
 
-      <Ionicons
-        name="chevron-forward"
-        size={20}
-        color="#999"
-      />
+      <View style={{ flex: 1 }}>
+        <Text
+          style={{
+            fontSize: 17,
+            fontWeight: "800",
+            color: danger ? "#EF4444" : "#111827",
+          }}
+        >
+          {title}
+        </Text>
+
+        {subtitle && (
+          <Text
+            style={{
+              marginTop: 2,
+              fontSize: 12,
+              color: "#64748B",
+            }}
+          >
+            {subtitle}
+          </Text>
+        )}
+      </View>
+
+      {!hideChevron && (
+        <Ionicons name="chevron-forward" size={22} color="#94A3B8" />
+      )}
     </TouchableOpacity>
   );
 }
-
-/* ───────────────────────── */
-/* ESTILOS */
-/* ───────────────────────── */
-const PRIMARY = "#FF6B35";
-const BG = "#F4F5F7";
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BG,
-    padding: 16,
-  },
-
-  /* Header */
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 24,
-  },
-
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "600",
-  },
-
-  /* Perfil */
-  profileSection: {
-    alignItems: "center",
-    marginBottom: 32,
-  },
-
-  avatarWrapper: {
-    position: "relative",
-    marginBottom: 12,
-  },
-
-  avatar: {
-    width: 112,
-    height: 112,
-    borderRadius: 56,
-    backgroundColor: "#ddd",
-  },
-
-  editAvatarButton: {
-    position: "absolute",
-    bottom: 4,
-    right: 4,
-    backgroundColor: PRIMARY,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    elevation: 3,
-  },
-
-  name: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: "#111",
-  },
-
-  email: {
-    fontSize: 14,
-    color: "#777",
-    marginTop: 4,
-  },
-
-  /* Secciones */
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 8,
-    marginTop: 16,
-  },
-
-  /* Menu */
-  menuItem: {
-    backgroundColor: "#FFF",
-    borderRadius: 16,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 12,
-    elevation: 1,
-  },
-
-  menuLeft: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
-  menuTitle: {
-    fontSize: 15,
-    color: "#111",
-  },
-
-  menuSubtitle: {
-    fontSize: 13,
-    color: "#777",
-    marginTop: 2,
-  },
-});

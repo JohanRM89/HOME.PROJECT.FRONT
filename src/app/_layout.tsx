@@ -28,7 +28,7 @@ export default function RootLayout() {
 
     <SafeAreaProvider>
       <PaperProvider theme={theme}>
-        <View style={{ flex: 1, backgroundColor: "#F8F6F6" }}>
+        <View style={{ flex: 1}}>
           <Stack screenOptions={{ headerShown: false }} />
         </View>
       </PaperProvider>

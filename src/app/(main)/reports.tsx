@@ -1,255 +1,313 @@
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-
-const ORANGE = "#FF6B35";
-const GREEN = "#2E7D32";
-const BACKGROUND = "#F4F5F7";
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BACKGROUND,
-    padding: 16,
-  },
-
-  screenTitle: {
-    textAlign: "center",
-    fontSize: 22,
-    fontWeight: "700",
-    marginBottom: 16,
-  },
-
-  mainCard: {
-    backgroundColor: "#FFF",
-    borderRadius: 24,
-    padding: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.06,
-    shadowRadius: 12,
-    elevation: 4,
-  },
-
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 12,
-    marginTop: 8,
-  },
-
-  card: {
-    backgroundColor: "#FFF",
-    borderRadius: 20,
-    padding: 16,
-    marginBottom: 24,
-  },
-
-  label: {
-    color: "#666",
-    fontSize: 14,
-  },
-
-  percentage: {
-    fontSize: 42,
-    fontWeight: "700",
-    color: ORANGE,
-    marginVertical: 4,
-  },
-
-  positiveIndicator: {
-    color: GREEN,
-    fontWeight: "600",
-    marginBottom: 16,
-  },
-
-  /* ─── Barra vertical ─── */
-  verticalBarContainer: {
-    alignItems: "center",
-  },
-
-  verticalBarTrack: {
-    width: 24,
-    height: 120,
-    backgroundColor: "#EEE",
-    borderRadius: 12,
-    justifyContent: "flex-end",
-    overflow: "hidden",
-  },
-
-  verticalBarFill: {
-    height: "50%",
-    backgroundColor: ORANGE,
-  },
-
-  barLabel: {
-    marginTop: 8,
-    fontSize: 14,
-  },
-
-  /* ─── Progreso individual ─── */
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
-
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: ORANGE,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  avatarText: {
-    color: "#FFF",
-    fontWeight: "700",
-    fontSize: 20,
-  },
-
-  name: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-
-  subtitle: {
-    fontSize: 13,
-    color: "#666",
-    marginBottom: 8,
-  },
-
-  progressRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-
-  horizontalBarTrack: {
-    flex: 1,
-    height: 8,
-    backgroundColor: "#EEE",
-    borderRadius: 4,
-    overflow: "hidden",
-  },
-
-  horizontalBarFill: {
-    width: "50%",
-    backgroundColor: ORANGE,
-    height: "100%",
-  },
-
-  progressText: {
-    fontWeight: "600",
-  },
-
-  /* ─── Resumen ─── */
-  summaryRow: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginTop: 8,
-  },
-
-  summaryItem: {
-    alignItems: "center",
-  },
-
-  summaryIcon: {
-    fontSize: 24,
-  },
-
-  summaryNumber: {
-    fontSize: 22,
-    fontWeight: "700",
-  },
-
-  summaryLabel: {
-    fontSize: 12,
-    color: "#666",
-    textAlign: "center",
-  },
-});
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { ScrollView, TouchableOpacity, View } from "react-native";
+import { Text } from "react-native-paper";
 
 export default function ReportsScreen() {
   return (
-    <ScreenContainer>
+    <ScreenContainer noPadding>
+      <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
+        <View
+          style={{
+            height: 72,
+            backgroundColor: "#FFFFFF",
+            paddingHorizontal: 20,
+            borderBottomWidth: 1,
+            borderBottomColor: "#F1F5F9",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color="#111827" />
+          </TouchableOpacity>
 
-      <View style={styles.container}>
-        {/* TÍTULO */}
-        <Text style={styles.screenTitle}>Reportes</Text>
+          <Text style={{ fontSize: 19, fontWeight: "900", color: "#111827" }}>
+            Reportes de Cumplimiento
+          </Text>
 
-        {/* CONTENEDOR PRINCIPAL */}
-        <View style={styles.mainCard}>
-          {/* ───────────────────────────── */}
-          {/* SECCIÓN 1: RENDIMIENTO SEMANAL */}
-          {/* ───────────────────────────── */}
-          <Text style={styles.sectionTitle}>Rendimiento semanal</Text>
-
-          <View style={styles.card}>
-            <Text style={styles.label}>Tareas completadas totales</Text>
-
-            <Text style={styles.percentage}>50%</Text>
-
-            <Text style={styles.positiveIndicator}>↑ 1 de 2</Text>
-
-            {/* BARRA VERTICAL */}
-            <View style={styles.verticalBarContainer}>
-              <View style={styles.verticalBarTrack}>
-                <View style={styles.verticalBarFill} />
-              </View>
-              <Text style={styles.barLabel}>Johan</Text>
-            </View>
-          </View>
-
-          {/* ───────────────────────────── */}
-          {/* SECCIÓN 2: PROGRESO INDIVIDUAL */}
-          {/* ───────────────────────────── */}
-          <Text style={styles.sectionTitle}>Progreso individual</Text>
-
-          <View style={styles.card}>
-            <View style={styles.row}>
-              {/* AVATAR */}
-              <View style={styles.avatar}>
-                <Text style={styles.avatarText}>J</Text>
-              </View>
-
-              <View style={{ flex: 1 }}>
-                <Text style={styles.name}>Johan</Text>
-                <Text style={styles.subtitle}>
-                  1 de 2 completadas 🏆 10000 pts
-                </Text>
-
-                {/* BARRA HORIZONTAL */}
-                <View style={styles.progressRow}>
-                  <View style={styles.horizontalBarTrack}>
-                    <View style={styles.horizontalBarFill} />
-                  </View>
-                  <Text style={styles.progressText}>50%</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          {/* ───────────────────────────── */}
-          {/* SECCIÓN 3: RESUMEN */}
-          {/* ───────────────────────────── */}
-          <View style={styles.summaryRow}>
-            <View style={styles.summaryItem}>
-              <Text style={styles.summaryIcon}>✅</Text>
-              <Text style={styles.summaryNumber}>1</Text>
-              <Text style={styles.summaryLabel}>Total completadas</Text>
-            </View>
-
-            <View style={styles.summaryItem}>
-              <Text style={styles.summaryIcon}>⏰</Text>
-              <Text style={styles.summaryNumber}>1</Text>
-              <Text style={styles.summaryLabel}>Pendientes</Text>
-            </View>
-          </View>
+          <TouchableOpacity>
+            <Ionicons name="calendar-outline" size={24} color="#334155" />
+          </TouchableOpacity>
         </View>
+
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingHorizontal: 24,
+            paddingTop: 28,
+            paddingBottom: 120,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 26,
+              fontWeight: "900",
+              color: "#111827",
+              marginBottom: 24,
+            }}
+          >
+            Rendimiento semanal
+          </Text>
+
+          <View
+            style={{
+              backgroundColor: "#FFFFFF",
+              borderRadius: 14,
+              borderWidth: 1,
+              borderColor: "#EEF2F7",
+              padding: 24,
+              height: 330,
+              marginBottom: 44,
+            }}
+          >
+            <Text style={{ fontSize: 15, color: "#64748B", marginBottom: 4 }}>
+              Tareas completadas totales
+            </Text>
+
+            <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+              <Text
+                style={{
+                  fontSize: 42,
+                  fontWeight: "900",
+                  color: "#111827",
+                  letterSpacing: -1,
+                }}
+              >
+                85%
+              </Text>
+
+              <Text
+                style={{
+                  marginLeft: 10,
+                  marginBottom: 8,
+                  color: "#10B981",
+                  fontSize: 14,
+                  fontWeight: "900",
+                }}
+              >
+                ↗ +12% esta semana
+              </Text>
+            </View>
+
+            <View
+              style={{
+                flex: 1,
+                marginTop: 28,
+                flexDirection: "row",
+                alignItems: "flex-end",
+                justifyContent: "space-between",
+              }}
+            >
+              <ChartBar name="Ana" value={70} />
+              <ChartBar name="Luis" value={55} />
+              <ChartBar name="Marta" value={90} />
+              <ChartBar name="Juan" value={65} />
+            </View>
+          </View>
+
+          <Text
+            style={{
+              fontSize: 22,
+              fontWeight: "900",
+              color: "#111827",
+              marginBottom: 18,
+            }}
+          >
+            Progreso individual
+          </Text>
+
+          <View style={{ gap: 16 }}>
+            <ProgressCard
+              name="Marta Sánchez"
+              detail="9 de 10 tareas completadas"
+              percent={90}
+            />
+
+            <ProgressCard
+              name="Ana García"
+              detail="7 de 10 tareas completadas"
+              percent={70}
+            />
+
+            <ProgressCard
+              name="Juan Pérez"
+              detail="13 de 20 tareas completadas"
+              percent={65}
+            />
+          </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 18,
+              marginTop: 28,
+            }}
+          >
+            <SummaryCard
+              icon="checkmark-done-circle-outline"
+              value="42"
+              label="Total completadas"
+              color="#FA541C"
+              bg="#FFF1E8"
+              border="#FED7C3"
+            />
+
+            <SummaryCard
+              icon="calendar-outline"
+              value="8"
+              label="Pendientes"
+              color="#64748B"
+              bg="#F1F5F9"
+              border="#E2E8F0"
+            />
+          </View>
+        </ScrollView>
       </View>
     </ScreenContainer>
-
   );
 }
-``
+
+function ChartBar({ name, value }: { name: string; value: number }) {
+  return (
+    <View style={{ alignItems: "center", flex: 1 }}>
+      <View
+        style={{
+          height: 145,
+          width: 34,
+          borderRadius: 999,
+          backgroundColor: "#F1F5F9",
+          justifyContent: "flex-end",
+          overflow: "hidden",
+          marginBottom: 14,
+        }}
+      >
+        <View
+          style={{
+            height: `${value}%`,
+            backgroundColor: "#FA541C",
+            borderRadius: 999,
+          }}
+        />
+      </View>
+
+      <Text style={{ color: "#64748B", fontSize: 12, fontWeight: "800" }}>
+        {name}
+      </Text>
+    </View>
+  );
+}
+
+function ProgressCard({
+  name,
+  detail,
+  percent,
+}: {
+  name: string;
+  detail: string;
+  percent: number;
+}) {
+  return (
+    <View
+      style={{
+        backgroundColor: "#FFFFFF",
+        borderRadius: 14,
+        borderWidth: 1,
+        borderColor: "#EEF2F7",
+        padding: 18,
+      }}
+    >
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View
+          style={{
+            width: 52,
+            height: 52,
+            borderRadius: 999,
+            backgroundColor: "#E2E8F0",
+            justifyContent: "center",
+            alignItems: "center",
+            marginRight: 14,
+          }}
+        >
+          <Ionicons name="person-outline" size={24} color="#64748B" />
+        </View>
+
+        <View style={{ flex: 1 }}>
+          <Text style={{ fontSize: 16, fontWeight: "900", color: "#111827" }}>
+            {name}
+          </Text>
+
+          <Text style={{ fontSize: 13, color: "#64748B", marginTop: 2 }}>
+            {detail}
+          </Text>
+        </View>
+
+        <Text style={{ color: "#FA541C", fontSize: 16, fontWeight: "900" }}>
+          {percent}%
+        </Text>
+      </View>
+
+      <View
+        style={{
+          height: 8,
+          backgroundColor: "#EEF2F7",
+          borderRadius: 999,
+          marginTop: 16,
+          overflow: "hidden",
+        }}
+      >
+        <View
+          style={{
+            width: `${percent}%`,
+            height: "100%",
+            backgroundColor: "#FA541C",
+            borderRadius: 999,
+          }}
+        />
+      </View>
+    </View>
+  );
+}
+
+function SummaryCard({
+  icon,
+  value,
+  label,
+  color,
+  bg,
+  border,
+}: {
+  icon: keyof typeof Ionicons.glyphMap;
+  value: string;
+  label: string;
+  color: string;
+  bg: string;
+  border: string;
+}) {
+  return (
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: bg,
+        borderWidth: 1,
+        borderColor: border,
+        borderRadius: 14,
+        padding: 18,
+        minHeight: 116,
+        justifyContent: "space-between",
+      }}
+    >
+      <Ionicons name={icon} size={26} color={color} />
+
+      <View>
+        <Text style={{ fontSize: 28, fontWeight: "900", color: "#111827" }}>
+          {value}
+        </Text>
+
+        <Text style={{ color: "#64748B", fontSize: 13 }}>{label}</Text>
+      </View>
+    </View>
+  );
+}

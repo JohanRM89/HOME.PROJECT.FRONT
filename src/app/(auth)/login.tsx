@@ -2,14 +2,20 @@ import { AuthUseCase } from "@/modules/auth/application/auth.usecase";
 import { AuthApi } from "@/modules/auth/infrastructure/auth.api";
 import { useAuthStore } from "@/modules/auth/ui/auth.store";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
+import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Button, HelperText, Text, TextInput } from "react-native-paper";
+import {
+  ImageBackground,
+  TextInput as RNTextInput,
+  ScrollView,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { HelperText, Text } from "react-native-paper";
 import { z } from "zod";
-
-
 
 const schema = z.object({
   email: z.string().email("Correo inválido"),
@@ -21,6 +27,7 @@ type FormData = z.infer<typeof schema>;
 export default function LoginScreen() {
   const loginStore = useAuthStore((s) => s.login);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     control,
@@ -35,7 +42,6 @@ export default function LoginScreen() {
   });
 
   const onSubmit = async (data: FormData) => {
-
     setApiError(null);
 
     try {
@@ -45,96 +51,285 @@ export default function LoginScreen() {
     } catch (error: any) {
       setApiError(error.message);
     }
-
   };
 
   return (
-    <>
-      <ScreenContainer>
-        <Text variant="headlineMedium">Iniciar sesión</Text>
+    <ScreenContainer noPadding>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingHorizontal: 16,
+          paddingTop: 18,
+          paddingBottom: 28,
+        }}
+      >
+        <View style={{ alignItems: "center", marginBottom: 34 }}>
+          <View
+            style={{
+              width: 64,
+              height: 64,
+              borderRadius: 12,
+              backgroundColor: "#FA541C",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: 18,
+              shadowColor: "#FA541C",
+              shadowOpacity: 0.25,
+              shadowRadius: 12,
+              shadowOffset: { width: 0, height: 8 },
+              elevation: 8,
+            }}
+          >
+            <Ionicons name="home-outline" size={32} color="#FFFFFF" />
+          </View>
 
-        {/* EMAIL */}
-        <Controller
-          control={control}
-          name="email"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              label="Correo"
-              value={value}
-              onChangeText={onChange}
-              autoCapitalize="none"
-              keyboardType="email-address"
-              error={!!errors.email}
-            />
-          )}
-        />
+          <Text style={{ fontSize: 32, fontWeight: "900", color: "#111827" }}>
+            HomeTask
+          </Text>
 
-        {errors.email && (
-          <Text style={{ color: "red" }}>{errors.email.message}</Text>
-        )}
+          <Text style={{ marginTop: 8, fontSize: 16, color: "#64748B" }}>
+            Gestiona tus tareas del hogar con facilidad
+          </Text>
+        </View>
 
-        {/* PASSWORD */}
-        <Controller
-          control={control}
-          name="password"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              label="Contraseña"
-              value={value}
-              onChangeText={onChange}
-              secureTextEntry
-              error={!!errors.password}
-            />
-          )}
-        />
-
-        {errors.password && (
-          <Text style={{ color: "red" }}>{errors.password.message}</Text>
-        )}
-
-        <Button
-          mode="contained"
-          onPress={handleSubmit(onSubmit)}
-          loading={isSubmitting}
+        <View
+          style={{
+            backgroundColor: "#FFFFFF",
+            borderRadius: 14,
+            borderWidth: 1,
+            borderColor: "#DDE3EA",
+            padding: 32,
+            shadowColor: "#000",
+            shadowOpacity: 0.04,
+            shadowRadius: 8,
+            shadowOffset: { width: 0, height: 4 },
+            elevation: 2,
+          }}
         >
-          Entrar
-        </Button>
-        {/* Link de recuperar contraseña */}
-
-        <Link href="/(auth)/forgot-password">
-          <Text
+          <ImageBackground
+            source={{
+              uri: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=900",
+            }}
+            imageStyle={{ borderRadius: 6 }}
             style={{
-              textAlign: "center",
-              marginTop: 12,
-              color: "#6750A4", // Material 3 primary
+              height: 122,
+              justifyContent: "flex-end",
+              marginBottom: 28,
+              overflow: "hidden",
             }}
           >
-            ¿Olvidaste tu contraseña?
-          </Text>
-        </Link>
-        {/* Link de recuperar contraseña */}
+            <View
+              style={{
+                padding: 16,
+                backgroundColor: "rgba(255,255,255,0.45)",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 21,
+                  fontWeight: "900",
+                  color: "#111827",
+                }}
+              >
+                Bienvenido de nuevo
+              </Text>
+            </View>
+          </ImageBackground>
 
-        <Link href="/(auth)/register">
-          <Text
+          <Text style={labelStyle}>Correo electrónico</Text>
+
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, value } }) => (
+              <View style={inputWrapper}>
+                <Ionicons name="mail-outline" size={20} color="#94A3B8" />
+                <RNTextInput
+                  value={value}
+                  onChangeText={onChange}
+                  placeholder="ejemplo@correo.com"
+                  placeholderTextColor="#94A3B8"
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  style={inputStyle}
+                />
+              </View>
+            )}
+          />
+
+          {errors.email && <ErrorText text={errors.email.message} />}
+
+          <Text style={[labelStyle, { marginTop: 24 }]}>Contraseña</Text>
+
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, value } }) => (
+              <View style={inputWrapper}>
+                <Ionicons name="lock-closed-outline" size={20} color="#94A3B8" />
+                <RNTextInput
+                  value={value}
+                  onChangeText={onChange}
+                  placeholder="••••••••"
+                  placeholderTextColor="#94A3B8"
+                  secureTextEntry={!showPassword}
+                  style={inputStyle}
+                />
+                <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                  <Ionicons
+                    name={showPassword ? "eye-off-outline" : "eye-outline"}
+                    size={20}
+                    color="#94A3B8"
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+          />
+
+          {errors.password && <ErrorText text={errors.password.message} />}
+
+          <Link href="/(auth)/forgot-password" asChild>
+            <TouchableOpacity style={{ alignSelf: "flex-end", marginTop: 22 }}>
+              <Text style={{ color: "#FA541C", fontWeight: "700" }}>
+                ¿Olvidaste tu contraseña?
+              </Text>
+            </TouchableOpacity>
+          </Link>
+
+          <TouchableOpacity
+            activeOpacity={0.85}
+            disabled={isSubmitting}
+            onPress={handleSubmit(onSubmit)}
             style={{
-              textAlign: "center",
-              marginTop: 12,
-              color: "#6750A4", // Material 3 primary
+              height: 52,
+              borderRadius: 7,
+              backgroundColor: "#FA541C",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "row",
+              gap: 8,
+              marginTop: 28,
+              shadowColor: "#FA541C",
+              shadowOpacity: 0.35,
+              shadowRadius: 14,
+              shadowOffset: { width: 0, height: 8 },
+              elevation: 8,
+              opacity: isSubmitting ? 0.7 : 1,
             }}
           >
-            Deseas registrarse
+            <Text style={{ color: "#FFFFFF", fontSize: 16, fontWeight: "900" }}>
+              {isSubmitting ? "Ingresando..." : "Iniciar sesión"}
+            </Text>
+
+            <Ionicons name="log-in-outline" size={22} color="#FFFFFF" />
+          </TouchableOpacity>
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginVertical: 28,
+            }}
+          >
+            <View style={{ flex: 1, height: 1, backgroundColor: "#E5E7EB" }} />
+            <Text
+              style={{
+                marginHorizontal: 14,
+                color: "#94A3B8",
+                fontSize: 12,
+                fontWeight: "900",
+                letterSpacing: 1,
+              }}
+            >
+              O CONTINÚA CON
+            </Text>
+            <View style={{ flex: 1, height: 1, backgroundColor: "#E5E7EB" }} />
+          </View>
+
+          <TouchableOpacity
+            activeOpacity={0.85}
+            style={{
+              height: 50,
+              borderRadius: 7,
+              borderWidth: 1,
+              borderColor: "#DDE3EA",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "row",
+              gap: 12,
+            }}
+          >
+            <Text style={{ fontSize: 18, fontWeight: "900", color: "#4285F4" }}>
+              G
+            </Text>
+            <Text style={{ fontSize: 16, fontWeight: "800", color: "#334155" }}>
+              Google
+            </Text>
+          </TouchableOpacity>
+
+          {apiError && (
+            <HelperText type="error" visible style={{ textAlign: "center" }}>
+              {apiError}
+            </HelperText>
+          )}
+        </View>
+
+        <View
+          style={{
+            marginTop: 34,
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ color: "#64748B", fontSize: 14 }}>
+            ¿No tienes una cuenta?{" "}
           </Text>
-        </Link>
 
-
-        {/* Mensaje de error */}
-        {apiError && (
-          <HelperText type="error" visible={!!apiError}>
-            {apiError}
-          </HelperText>)}
-
-      </ScreenContainer>
-    </>
+          <Link href="/(auth)/register" asChild>
+            <TouchableOpacity>
+              <Text style={{ color: "#FA541C", fontSize: 14 }}>
+                Regístrate gratis
+              </Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+      </ScrollView>
+    </ScreenContainer>
   );
 }
-``;
+
+function ErrorText({ text }: { text?: string }) {
+  if (!text) return null;
+
+  return (
+    <Text style={{ color: "#EF4444", fontSize: 12, marginTop: 6 }}>
+      {text}
+    </Text>
+  );
+}
+
+const labelStyle = {
+  fontSize: 15,
+  color: "#334155",
+  fontWeight: "800" as const,
+  marginBottom: 8,
+};
+
+const inputWrapper = {
+  height: 50,
+  borderRadius: 7,
+  borderWidth: 1,
+  borderColor: "#DDE3EA",
+  paddingHorizontal: 12,
+  flexDirection: "row" as const,
+  alignItems: "center" as const,
+  backgroundColor: "#FFFFFF",
+};
+
+const inputStyle = {
+  flex: 1,
+  marginLeft: 12,
+  fontSize: 16,
+  color: "#111827",
+  paddingVertical: 0,
+};
