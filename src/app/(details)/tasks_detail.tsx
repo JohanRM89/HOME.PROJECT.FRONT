@@ -1,17 +1,43 @@
+import { useAuthStore } from "@/modules/auth/ui/auth.store";
+import { TaskUseCase } from "@/modules/tasks/application/task.usecase";
+import { CreateCommentTask } from "@/modules/tasks/domain/ITaskRepository";
+import { TaskApi } from "@/modules/tasks/infraestructure/task.api";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
+import { CommentCard } from "@/shared/components/tasks/CommentCard";
+import { InfoCard } from "@/shared/components/tasks/InfoCard";
+import { SectionTitle } from "@/shared/components/tasks/SectionTitle";
+import { StatusOption } from "@/shared/components/tasks/StatusOption";
+import { useComentsTask } from "@/shared/hooks/useCommentsTask";
 import { useDetailsTasks } from "@/shared/hooks/useDetailsTasks";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
-import { Image, Pressable, ScrollView, TextInput, TouchableOpacity, View } from "react-native";
+import { ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native-paper";
 export default function TaskDetailScreen() {
   const [showNoteInput, setShowNoteInput] = useState(false);
   const [note, setNote] = useState("");
   const { taskId } = useLocalSearchParams<{ taskId: string }>();
   const { task_details, loading_group, error_group } = useDetailsTasks(taskId);
-  console.log("tas", task_details)
+  const { comments_task, loading_coment, error_coment, reload } = useComentsTask(taskId);
+  const useCase = new TaskUseCase(new TaskApi());
+  const user = useAuthStore((s) => s.user);
 
+
+  const sendMessage = async () => {
+    const objet: CreateCommentTask = {
+      content: note,
+      task_id: taskId,
+      user_id: user?.id
+    }
+    const dataSen = await useCase.createCommentTasks(objet);
+    if (dataSen.message === "Comentario creado exitosamente") {
+      reload();
+      setNote("");
+      setShowNoteInput(false);
+    }
+
+  }
   return (
     <ScreenContainer noPadding>
       <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
@@ -159,7 +185,7 @@ export default function TaskDetailScreen() {
             }}
           >
             {task_details?.description}
- 
+
           </Text>
 
           <View
@@ -241,10 +267,7 @@ export default function TaskDetailScreen() {
                 <TouchableOpacity
                   activeOpacity={0.85}
                   onPress={() => {
-                    console.log("Nota guardada:", note);
-
-                    setNote("");
-                    setShowNoteInput(false);
+                    sendMessage();
                   }}
                   style={{
                     flex: 1,
@@ -268,16 +291,14 @@ export default function TaskDetailScreen() {
             </View>
           )}
           <View style={{ gap: 14 }}>
-            <CommentCard
-              highlighted
-              text="No olvidar comprar desengrasante antes de empezar."
-              meta="Hace 2 horas • Carlos R."
-            />
-
-            <CommentCard
-              text="¿Alguien sabe dónde están los paños de microfibra nuevos?"
-              meta="Hace 15 min • Maria G."
-            />
+            {comments_task?.map((comme) => (
+              <CommentCard
+                highlighted
+                key={comme.id}
+                text={comme.content}
+                meta={comme.created_at}
+              />
+            ))}
           </View>
         </ScrollView>
       </View>
@@ -285,160 +306,7 @@ export default function TaskDetailScreen() {
   );
 }
 
-function SectionTitle({ title }: { title: string }) {
-  return (
-    <Text
-      style={{
-        fontSize: 13,
-        fontWeight: "900",
-        color: "#64748B",
-        letterSpacing: 0.7,
-        marginBottom: 14,
-      }}
-    >
-      {title}
-    </Text>
-  );
-}
 
-function StatusOption({
-  active = false,
-  icon,
-  label,
-}: {
-  active?: boolean;
-  icon: keyof typeof Ionicons.glyphMap;
-  label: string;
-}) {
-  return (
-    <Pressable
-      style={{
-        flex: 1,
-        height: 64,
-        borderRadius: 10,
-        backgroundColor: active ? "#FFFFFF" : "transparent",
-        justifyContent: "center",
-        alignItems: "center",
-        borderWidth: active ? 1 : 0,
-        borderColor: "#E2E8F0",
-        shadowColor: "#000",
-        shadowOpacity: active ? 0.05 : 0,
-        shadowRadius: 8,
-        shadowOffset: { width: 0, height: 4 },
-        elevation: active ? 2 : 0,
-      }}
-    >
-      <Ionicons
-        name={icon}
-        size={22}
-        color={active ? "#FA541C" : "#94A3B8"}
-      />
 
-      <Text
-        style={{
-          marginTop: 5,
-          color: active ? "#111827" : "#64748B",
-          fontSize: 10,
-          fontWeight: "900",
-        }}
-      >
-        {label}
-      </Text>
-    </Pressable>
-  );
-}
 
-function InfoCard({
-  label,
-  value,
-  icon,
-  iconType,
-}: {
-  label: string;
-  value?: string;
-  icon?: keyof typeof Ionicons.glyphMap;
-  iconType?: "avatar";
-}) {
-  return (
-    <View
-      style={{
-        flex: 1,
-        minHeight: 64,
-        backgroundColor: "#F8FAFC",
-        borderRadius: 12,
-        paddingHorizontal: 12,
-        flexDirection: "row",
-        alignItems: "center",
-      }}
-    >
-      {iconType === "avatar" ? (
-        <Image
-          source={{ uri: "https://i.pravatar.cc/100?img=12" }}
-          style={{ width: 42, height: 42, borderRadius: 999, marginRight: 10 }}
-        />
-      ) : (
-        <View
-          style={{
-            width: 42,
-            height: 42,
-            borderRadius: 10,
-            backgroundColor: "#FFECE5",
-            justifyContent: "center",
-            alignItems: "center",
-            marginRight: 10,
-          }}
-        >
-          <Ionicons name={icon ?? "calendar-outline"} size={24} color="#FA541C" />
-        </View>
-      )}
 
-      <View style={{ flex: 1 }}>
-        <Text style={{ fontSize: 10, fontWeight: "900", color: "#CBD5E1" }}>
-          {label}
-        </Text>
-
-        <Text style={{ fontSize: 14, fontWeight: "800", color: "#111827" }}>
-          {value}
-        </Text>
-      </View>
-    </View>
-  );
-}
-
-function CommentCard({
-  text,
-  meta,
-  highlighted = false,
-}: {
-  text: string;
-  meta: string;
-  highlighted?: boolean;
-}) {
-  return (
-    <View
-      style={{
-        backgroundColor: "#F8FAFC",
-        borderRadius: 12,
-        paddingVertical: 16,
-        paddingHorizontal: 18,
-        borderLeftWidth: highlighted ? 4 : 0,
-        borderLeftColor: "#FA541C",
-      }}
-    >
-      <Text style={{ fontSize: 15, lineHeight: 22, color: "#475569" }}>
-        {text}
-      </Text>
-
-      <Text
-        style={{
-          marginTop: 8,
-          fontSize: 11,
-          color: "#94A3B8",
-          fontWeight: "700",
-        }}
-      >
-        {meta}
-      </Text>
-    </View>
-  );
-}

@@ -33,6 +33,12 @@ export interface ResponseTareas {
   message: string;
   ok: boolean;
 }
+export interface ResponseComments {
+  data: DataListaTareas;
+  message: string;
+  ok: boolean;
+}
+
 export interface ResponseMessageData {
   data: MessageData[];
   message: string;
@@ -44,6 +50,11 @@ export interface MessageData {
   user_id: string;
   content: string;
   created_at: string;
+}
+export interface CreateCommentTask {
+  task_id?: string;
+  user_id?: string;
+  content: string;
 }
 export interface DataListaTareas {
   id: string;

@@ -1,5 +1,6 @@
 import { httpClient } from "@/shared/api/httpClients";
 import {
+    CreateCommentTask,
     ResponseDataListaTareas,
     ResponseMessageData,
     ResponseTareas,
@@ -23,8 +24,14 @@ export class TaskApi implements TaskRepository {
     const { data } = await httpClient.get(`/tasks/obtenerById/${groupId}`);
     return data;
   }
-  async getCommentsByTask(task_id: string): Promise<ResponseMessageData> {
+  async getCommentByTask(task_id: string): Promise<ResponseMessageData> {
     const { data } = await httpClient.get(`/tasks/comments/task/${task_id}`);
+    return data;
+  }
+  async createCommentTask(
+    sendData: CreateCommentTask,
+  ): Promise<ResponseMessageData> {
+    const { data } = await httpClient.post("/tasks/comments", sendData);
     return data;
   }
 }
