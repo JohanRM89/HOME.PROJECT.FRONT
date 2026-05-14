@@ -17,14 +17,17 @@ import { Modal, Portal, Text } from "react-native-paper";
 
 export default function MembersScreen() {
   const [visible, setVisible] = useState(false);
-  const inviteCode = "HG-92KD";
   const memberid = useAuthStore((s) => s.memberid);
-  
-  const {error_members,loading_members,members, reload } = useMembers(memberid);
-  //const listMemebers = members.
+
+  const { error_members, loading_members, members, reload } = useMembers(memberid);
+  const dataMembers = members?.data;
+  const inviteCode = dataMembers?.invitation_code;
+  const countMembers = dataMembers?.miembros.length;
   const copyCode = async () => {
-    await Clipboard.setStringAsync(inviteCode);
+    await Clipboard.setStringAsync(String(inviteCode));
   };
+
+const random = Math.random();
 
   return (
     <ScreenContainer noPadding>
@@ -107,11 +110,11 @@ export default function MembersScreen() {
 
             <View style={{ flex: 1 }}>
               <Text style={{ fontSize: 22, fontWeight: "900", color: "#111827" }}>
-                Familia García
+                {dataMembers?.name}
               </Text>
 
               <Text style={{ fontSize: 15, color: "#64748B", marginTop: 2 }}>
-                Hogar principal • 4 miembros
+                Hogar principal • {countMembers} miembros
               </Text>
 
               <View
@@ -190,37 +193,18 @@ export default function MembersScreen() {
           </View>
 
           <View style={{ gap: 14 }}>
-            <MemberRow
-              name="Carlos García"
-              role="Papá"
-              avatar="https://i.pravatar.cc/100?img=12"
-              badge="ADMINISTRADOR"
-              badgeType="admin"
-            />
+            {dataMembers?.miembros.map((m, i) => (
+              <MemberRow
+                key={i}
+                name={m.name}
+                avatar={`https://i.pravatar.cc/100?img=${random}`}
+                badge={m.role === "admin" ? "ADMINISTRADOR" : "MIEMBRO"}
+                badgeType={m.role}
+              />
 
-            <MemberRow
-              name="Elena Ruiz"
-              role="Mamá"
-              avatar="https://i.pravatar.cc/100?img=47"
-              badge="MIEMBRO"
-            />
-
-            <MemberRow
-              name="Mateo García"
-              role="Hijo"
-              avatar="https://i.pravatar.cc/100?img=33"
-              badge="MIEMBRO"
-            />
-
-            <MemberRow
-              name="Sofía García"
-              role="Hija"
-              avatar="https://i.pravatar.cc/100?img=32"
-              badge="MIEMBRO"
-            />
+            ))}
           </View>
         </ScrollView>
-
         <Portal>
           <Modal
             visible={visible}

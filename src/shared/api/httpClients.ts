@@ -32,9 +32,10 @@ httpClient.interceptors.request.use(
 httpClient.interceptors.response.use(
   (response) => {
     if (
-      response.data &&
-      response.data.ok === false &&
-      response.data.message === "Token inválido o expirado"
+      (response.data &&
+        response.data.ok === false &&
+        response.data.message === "Token inválido o expirado") ||
+      response.data.message === "Token no proporcionado"
     ) {
       cerrarSesion();
     }

@@ -1,10 +1,21 @@
+import { useAuthStore } from "@/modules/auth/ui/auth.store";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
+import { ChartBar } from "@/shared/components/reports/CharBar";
+import { ProgressCard } from "@/shared/components/reports/ProgressCard";
+import { SummaryCard } from "@/shared/components/reports/SummaryCard";
+import { useReports } from "@/shared/hooks/useReports";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native-paper";
 
 export default function ReportsScreen() {
+
+  const memberid = useAuthStore((s) => s.memberid);
+  const { error_reports, loading_reports, reports, reload } = useReports(memberid);
+  const DataReport = reports?.data;
+  const DataReportUsersList = reports?.data.users;
+
   return (
     <ScreenContainer noPadding>
       <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
@@ -51,7 +62,31 @@ export default function ReportsScreen() {
           >
             Rendimiento semanal
           </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 18,
+              marginTop: 28,
+            }}
+          >
+            <SummaryCard
+              icon="checkmark-done-circle-outline"
+              value={DataReport?.summary.completed}
+              label="Total completadas"
+              color="#FA541C"
+              bg="#FFF1E8"
+              border="#FED7C3"
+            />
 
+            <SummaryCard
+              icon="calendar-outline"
+              value={DataReport?.summary.pending}
+              label="Pendientes"
+              color="#64748B"
+              bg="#F1F5F9"
+              border="#E2E8F0"
+            />
+          </View>
           <View
             style={{
               backgroundColor: "#FFFFFF",
@@ -76,10 +111,10 @@ export default function ReportsScreen() {
                   letterSpacing: -1,
                 }}
               >
-                85%
+                {DataReport?.summary.complianceRate}%
               </Text>
 
-              <Text
+              {/* <Text
                 style={{
                   marginLeft: 10,
                   marginBottom: 8,
@@ -89,7 +124,7 @@ export default function ReportsScreen() {
                 }}
               >
                 ↗ +12% esta semana
-              </Text>
+              </Text> */}
             </View>
 
             <View
@@ -101,10 +136,9 @@ export default function ReportsScreen() {
                 justifyContent: "space-between",
               }}
             >
-              <ChartBar name="Ana" value={70} />
-              <ChartBar name="Luis" value={55} />
-              <ChartBar name="Marta" value={90} />
-              <ChartBar name="Juan" value={65} />
+              {DataReportUsersList?.map((m, i) => (
+                <ChartBar name={m.name} key={i} value={m.percent} />
+              ))}
             </View>
           </View>
 
@@ -120,49 +154,13 @@ export default function ReportsScreen() {
           </Text>
 
           <View style={{ gap: 16 }}>
-            <ProgressCard
-              name="Marta Sánchez"
-              detail="9 de 10 tareas completadas"
-              percent={90}
-            />
-
-            <ProgressCard
-              name="Ana García"
-              detail="7 de 10 tareas completadas"
-              percent={70}
-            />
-
-            <ProgressCard
-              name="Juan Pérez"
-              detail="13 de 20 tareas completadas"
-              percent={65}
-            />
-          </View>
-
-          <View
-            style={{
-              flexDirection: "row",
-              gap: 18,
-              marginTop: 28,
-            }}
-          >
-            <SummaryCard
-              icon="checkmark-done-circle-outline"
-              value="42"
-              label="Total completadas"
-              color="#FA541C"
-              bg="#FFF1E8"
-              border="#FED7C3"
-            />
-
-            <SummaryCard
-              icon="calendar-outline"
-              value="8"
-              label="Pendientes"
-              color="#64748B"
-              bg="#F1F5F9"
-              border="#E2E8F0"
-            />
+            {DataReportUsersList?.map((m, i) => (
+              <ProgressCard
+                key={i}
+                name={m.name}
+                detail={`${m.completed} de ${m.total} tareas completadas` } 
+                percent={m.percent}
+              />))}
           </View>
         </ScrollView>
       </View>
@@ -170,144 +168,6 @@ export default function ReportsScreen() {
   );
 }
 
-function ChartBar({ name, value }: { name: string; value: number }) {
-  return (
-    <View style={{ alignItems: "center", flex: 1 }}>
-      <View
-        style={{
-          height: 145,
-          width: 34,
-          borderRadius: 999,
-          backgroundColor: "#F1F5F9",
-          justifyContent: "flex-end",
-          overflow: "hidden",
-          marginBottom: 14,
-        }}
-      >
-        <View
-          style={{
-            height: `${value}%`,
-            backgroundColor: "#FA541C",
-            borderRadius: 999,
-          }}
-        />
-      </View>
 
-      <Text style={{ color: "#64748B", fontSize: 12, fontWeight: "800" }}>
-        {name}
-      </Text>
-    </View>
-  );
-}
 
-function ProgressCard({
-  name,
-  detail,
-  percent,
-}: {
-  name: string;
-  detail: string;
-  percent: number;
-}) {
-  return (
-    <View
-      style={{
-        backgroundColor: "#FFFFFF",
-        borderRadius: 14,
-        borderWidth: 1,
-        borderColor: "#EEF2F7",
-        padding: 18,
-      }}
-    >
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <View
-          style={{
-            width: 52,
-            height: 52,
-            borderRadius: 999,
-            backgroundColor: "#E2E8F0",
-            justifyContent: "center",
-            alignItems: "center",
-            marginRight: 14,
-          }}
-        >
-          <Ionicons name="person-outline" size={24} color="#64748B" />
-        </View>
 
-        <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 16, fontWeight: "900", color: "#111827" }}>
-            {name}
-          </Text>
-
-          <Text style={{ fontSize: 13, color: "#64748B", marginTop: 2 }}>
-            {detail}
-          </Text>
-        </View>
-
-        <Text style={{ color: "#FA541C", fontSize: 16, fontWeight: "900" }}>
-          {percent}%
-        </Text>
-      </View>
-
-      <View
-        style={{
-          height: 8,
-          backgroundColor: "#EEF2F7",
-          borderRadius: 999,
-          marginTop: 16,
-          overflow: "hidden",
-        }}
-      >
-        <View
-          style={{
-            width: `${percent}%`,
-            height: "100%",
-            backgroundColor: "#FA541C",
-            borderRadius: 999,
-          }}
-        />
-      </View>
-    </View>
-  );
-}
-
-function SummaryCard({
-  icon,
-  value,
-  label,
-  color,
-  bg,
-  border,
-}: {
-  icon: keyof typeof Ionicons.glyphMap;
-  value: string;
-  label: string;
-  color: string;
-  bg: string;
-  border: string;
-}) {
-  return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: bg,
-        borderWidth: 1,
-        borderColor: border,
-        borderRadius: 14,
-        padding: 18,
-        minHeight: 116,
-        justifyContent: "space-between",
-      }}
-    >
-      <Ionicons name={icon} size={26} color={color} />
-
-      <View>
-        <Text style={{ fontSize: 28, fontWeight: "900", color: "#111827" }}>
-          {value}
-        </Text>
-
-        <Text style={{ color: "#64748B", fontSize: 13 }}>{label}</Text>
-      </View>
-    </View>
-  );
-}

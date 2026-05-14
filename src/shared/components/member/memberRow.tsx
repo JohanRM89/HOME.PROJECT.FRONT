@@ -1,22 +1,20 @@
 import {
-    Image,
-    Pressable,
-    View,
+  Image,
+  Pressable,
+  View,
 } from "react-native";
 import { Text } from "react-native-paper";
 
 export function MemberRow({
   name,
-  role,
   avatar,
   badge,
-  badgeType = "member",
+  badgeType,
 }: {
   name: string;
-  role: string;
   avatar: string;
   badge: string;
-  badgeType?: "admin" | "member";
+  badgeType?: string;
 }) {
   const isAdmin = badgeType === "admin";
 
@@ -48,9 +46,9 @@ export function MemberRow({
           {name}
         </Text>
 
-        <Text style={{ fontSize: 13, color: "#64748B", marginTop: 2 }}>
+        {/* <Text style={{ fontSize: 13, color: "#64748B", marginTop: 2 }}>
           {role}
-        </Text>
+        </Text> */}
       </View>
 
       <View

@@ -10,6 +10,7 @@ import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
 import { SectionHeader } from "@/shared/components/home/SectionHeader";
 import { StatusCard } from "@/shared/components/home/StatusCard";
 import { TaskCard } from "@/shared/components/home/TaskCard";
+import { useReportsOne } from "@/shared/hooks/useReportsOne";
 import { useTasksGroups } from "@/shared/hooks/useTaksGroups";
 import { useTasks } from "@/shared/hooks/useTask";
 
@@ -21,8 +22,7 @@ export default function HomeScreen() {
 
   const { tasks, loading, error } = useTasks(user?.id);
   const { tasks_group, loading_group, error_group } = useTasksGroups(memberid);
-
-
+  const {error_reports,loading_reports,reload,reports } = useReportsOne(memberid);
   const MAX_VISIBLE_TASKS = 3;
   const TASK_CARD_HEIGHT = 110;
 
@@ -75,21 +75,21 @@ export default function HomeScreen() {
         >
           <StatusCard
             title="Pendientes"
-            count={5}
+            count={reports?.data[0].pending_tasks}
             color="#FFF7CC"
             colorText="#A16207"
           />
 
           <StatusCard
             title="En proceso"
-            count={2}
+            count={reports?.data[0].in_progress_tasks}
             color="#DDEBFF"
             colorText="#1D4ED8"
           />
 
           <StatusCard
             title="Completadas"
-            count={8}
+            count={reports?.data[0].completed_tasks}
             color="#DCFCE7"
             colorText="#15803D"
           />

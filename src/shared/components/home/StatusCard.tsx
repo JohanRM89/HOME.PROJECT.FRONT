@@ -3,7 +3,7 @@ import { Text } from "react-native-paper";
 
 interface Props {
     title: string;
-    count: number;
+    count?: number;
     color: string;
     colorText: string;
 }
