@@ -1,4 +1,7 @@
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
+import { CalendarTaskRow } from "@/shared/components/tasks/CalendarTaskRow";
+import { EmptyState } from "@/shared/components/tasks/EmptyState";
+import { MonthButton } from "@/shared/components/tasks/MonthButton";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useMemo, useState } from "react";
@@ -35,7 +38,13 @@ const mockTasks: Record<string, any[]> = {
     },
   ],
 };
+function formatDateKey(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
 
+  return `${year}-${month}-${day}`;
+}
 export default function CalendarScreen() {
   const today = new Date();
 
@@ -286,140 +295,7 @@ export default function CalendarScreen() {
   );
 }
 
-function MonthButton({
-  icon,
-  onPress,
-}: {
-  icon: keyof typeof Ionicons.glyphMap;
-  onPress: () => void;
-}) {
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={{
-        width: 30,
-        height: 30,
-        borderRadius: 8,
-        backgroundColor: "#FFFFFF",
-        borderWidth: 1,
-        borderColor: "#E2E8F0",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Ionicons name={icon} size={20} color="#FA541C" />
-    </TouchableOpacity>
-  );
-}
 
-function CalendarTaskRow({
-  title,
-  time,
-  status,
-  icon,
-  bg,
-  color,
-}: {
-  title: string;
-  time: string;
-  status: string;
-  icon: keyof typeof Ionicons.glyphMap;
-  bg: string;
-  color: string;
-}) {
-  return (
-    <Pressable
-      style={{
-        minHeight: 82,
-        backgroundColor: "#FFFFFF",
-        borderRadius: 14,
-        borderWidth: 1,
-        borderColor: "#EEF2F7",
-        paddingHorizontal: 16,
-        flexDirection: "row",
-        alignItems: "center",
-      }}
-    >
-      <View
-        style={{
-          width: 52,
-          height: 52,
-          borderRadius: 12,
-          backgroundColor: bg,
-          justifyContent: "center",
-          alignItems: "center",
-          marginRight: 16,
-        }}
-      >
-        <Ionicons name={icon} size={25} color={color} />
-      </View>
 
-      <View style={{ flex: 1 }}>
-        <Text style={{ fontSize: 17, fontWeight: "900", color: "#111827" }}>
-          {title}
-        </Text>
 
-        <Text style={{ fontSize: 15, color: "#64748B", marginTop: 2 }}>
-          {time} • {status}
-        </Text>
-      </View>
 
-      <Ionicons name="chevron-forward" size={22} color="#CBD5E1" />
-    </Pressable>
-  );
-}
-
-function EmptyState() {
-  return (
-    <View
-      style={{
-        backgroundColor: "#FFFFFF",
-        borderRadius: 14,
-        borderWidth: 1,
-        borderColor: "#EEF2F7",
-        padding: 24,
-        alignItems: "center",
-      }}
-    >
-      <Ionicons name="calendar-outline" size={42} color="#94A3B8" />
-
-      <Text
-        style={{
-          marginTop: 12,
-          fontSize: 16,
-          color: "#64748B",
-          fontWeight: "700",
-          textAlign: "center",
-        }}
-      >
-        No hay tareas para esta fecha
-      </Text>
-
-      <TouchableOpacity
-        activeOpacity={0.85}
-        onPress={() => router.push("/(details)/create_tasks")}
-        style={{
-          marginTop: 16,
-          height: 44,
-          paddingHorizontal: 22,
-          borderRadius: 999,
-          backgroundColor: "#FA541C",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Text style={{ color: "#FFFFFF", fontWeight: "900" }}>
-          Crear tarea
-        </Text>
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-function formatDateKey(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-}

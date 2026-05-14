@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/modules/auth/ui/auth.store";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -5,6 +6,17 @@ import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native-paper";
 
 export default function ProfileScreen() {
+  const user = useAuthStore((s) => s.user);
+
+  const logout = useAuthStore((s) => s.logout);
+
+  const handleLogout = async () => {
+    await logout();
+
+    // ✅ elimina historial y manda a login
+    router.replace("/(auth)/login");
+  };
+
   return (
     <ScreenContainer noPadding>
       <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
@@ -82,7 +94,7 @@ export default function ProfileScreen() {
                 textAlign: "center",
               }}
             >
-              Alejandro García
+              {user?.name}
             </Text>
 
             <Text
@@ -93,7 +105,7 @@ export default function ProfileScreen() {
                 fontWeight: "600",
               }}
             >
-              alejandro.garcia@hometask.com
+              {user?.email}
             </Text>
           </View>
 
@@ -120,12 +132,17 @@ export default function ProfileScreen() {
           <SectionTitle title="Cuenta" />
 
           <View style={{ gap: 4 }}>
-            <ProfileOption
-              icon="log-out-outline"
-              title="Cerrar sesión"
-              danger
-              hideChevron
-            />
+
+            <TouchableOpacity onPress={handleLogout()}>
+
+              <ProfileOption
+
+                icon="log-out-outline"
+                title="Cerrar sesión"
+                danger
+                hideChevron
+              />
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>
