@@ -11,6 +11,7 @@ export default function ProfileScreen() {
   const logout = useAuthStore((s) => s.logout);
 
   const handleLogout = async () => {
+    console.log("Dentor de cerrar")
     await logout();
 
     // ✅ elimina historial y manda a login
@@ -133,7 +134,6 @@ export default function ProfileScreen() {
 
           <View style={{ gap: 4 }}>
 
-            <TouchableOpacity onPress={handleLogout()}>
 
               <ProfileOption
 
@@ -141,8 +141,10 @@ export default function ProfileScreen() {
                 title="Cerrar sesión"
                 danger
                 hideChevron
+                
+  onPress={handleLogout}
+
               />
-            </TouchableOpacity>
           </View>
         </ScrollView>
       </View>
@@ -171,16 +173,19 @@ function ProfileOption({
   subtitle,
   danger = false,
   hideChevron = false,
+  onPress,
 }: {
   icon: keyof typeof Ionicons.glyphMap;
   title: string;
   subtitle?: string;
   danger?: boolean;
   hideChevron?: boolean;
+   onPress?: () => void; 
 }) {
   return (
     <TouchableOpacity
       activeOpacity={0.85}
+      onPress={onPress}
       style={{
         minHeight: 72,
         backgroundColor: "#FFFFFF",
