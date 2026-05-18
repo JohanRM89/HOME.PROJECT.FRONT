@@ -73,7 +73,7 @@ export default function HomeScreen() {
             paddingRight: 20,
           }}
         >
-          <StatusCard
+        <StatusCard
             title="Pendientes"
             count={reports?.data[0].pending_tasks}
             color="#FFF7CC"

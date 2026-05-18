@@ -75,3 +75,10 @@ export interface DataListaTareas {
   assigned_to_name: string;
   group_name: string;
 }
+
+export interface ITaskRepository {
+  getCalendarTasksByDay(
+    groupId: string,
+    selectedDay: string,
+  ): Promise<DataListaTareas[]>;
+}

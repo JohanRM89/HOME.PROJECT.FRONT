@@ -69,4 +69,7 @@ export class TaskUseCase {
       throw new Error(apiMessage);
     }
   }
+  async getCalendarTasksByDay(groupId: string, selectedDay: string) {
+    return this.repository.getCalendarTasksByDay(groupId, selectedDay);
+  }
 }

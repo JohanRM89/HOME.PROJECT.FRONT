@@ -1,9 +1,9 @@
 import { httpClient } from "@/shared/api/httpClients";
 import {
-    CreateCommentTask,
-    ResponseDataListaTareas,
-    ResponseMessageData,
-    ResponseTareas,
+  CreateCommentTask,
+  ResponseDataListaTareas,
+  ResponseMessageData,
+  ResponseTareas,
 } from "../domain/ITaskRepository";
 import { TaskRepository } from "../domain/TaskRepository";
 
@@ -33,5 +33,15 @@ export class TaskApi implements TaskRepository {
   ): Promise<ResponseMessageData> {
     const { data } = await httpClient.post("/tasks/comments", sendData);
     return data;
+  }
+  async getCalendarTasksByDay(
+    groupId: string,
+    selectedDay: string,
+  ): Promise<ResponseDataListaTareas> {
+    const response = await httpClient.get(
+      `/tasks/familias/${groupId}/calendario?dia=${selectedDay}`,
+    );
+
+    return response.data;
   }
 }

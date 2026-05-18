@@ -1,43 +1,17 @@
+import { useAuthStore } from "@/modules/auth/ui/auth.store";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
-import { CalendarTaskRow } from "@/shared/components/tasks/CalendarTaskRow";
 import { EmptyState } from "@/shared/components/tasks/EmptyState";
 import { MonthButton } from "@/shared/components/tasks/MonthButton";
+import { TaskDayCard } from "@/shared/components/tasks/TaskDayCalendar";
+import { useCalendarTasks } from "@/shared/hooks/useTaskCalendar";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useMemo, useState } from "react";
-import { Pressable, ScrollView, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native-paper";
 
 const WEEK_DAYS = ["LU", "MA", "MI", "JU", "VI", "SÁ", "DO"];
 
-const mockTasks: Record<string, any[]> = {
-  "2026-10-05": [
-    {
-      title: "Limpiar la cocina",
-      time: "08:00 AM",
-      status: "Completada",
-      icon: "checkmark-circle-outline",
-      bg: "#DCFCE7",
-      color: "#16A34A",
-    },
-    {
-      title: "Organizar el salón",
-      time: "10:30 AM",
-      status: "En proceso",
-      icon: "brush-outline",
-      bg: "#DBEAFE",
-      color: "#2563EB",
-    },
-    {
-      title: "Compras semanales",
-      time: "04:00 PM",
-      status: "Pendiente",
-      icon: "cart-outline",
-      bg: "#FEF3C7",
-      color: "#D97706",
-    },
-  ],
-};
 function formatDateKey(date: Date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -45,16 +19,70 @@ function formatDateKey(date: Date) {
 
   return `${year}-${month}-${day}`;
 }
+
+function formatTaskTime(date?: string) {
+  if (!date) return "Sin hora";
+
+  return new Date(date).toLocaleTimeString("es-CO", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+type TaskVisual = {
+  status: string;
+  icon: keyof typeof Ionicons.glyphMap;
+  bg: string;
+  color: string;
+};
+function getTaskVisual(status: string): TaskVisual {
+  if (status === "completed") {
+    return {
+      status: "Completada",
+      icon: "checkmark-circle-outline",
+      bg: "#DCFCE7",
+      color: "#16A34A",
+    };
+  }
+
+  if (status === "in_progress") {
+    return {
+      status: "En proceso",
+      icon: "brush-outline",
+      bg: "#DBEAFE",
+      color: "#2563EB",
+    };
+  }
+
+  return {
+    status: "Pendiente",
+    icon: "time-outline",
+    bg: "#FEF3C7",
+    color: "#D97706",
+  };
+}
+
 export default function CalendarScreen() {
   const today = new Date();
 
+  const memberid = useAuthStore((s) => s.memberid);
+
   const [selectedDate, setSelectedDate] = useState(today);
   const [visibleMonth, setVisibleMonth] = useState(
-    new Date(today.getFullYear(), today.getMonth(), 1)
+    new Date(today.getFullYear(), today.getMonth(), 1),
   );
 
   const selectedKey = formatDateKey(selectedDate);
-  const tasks = mockTasks[selectedKey] || [];
+
+  const { tasks, loading, error } = useCalendarTasks(memberid, selectedKey);
+  const calendarTasks = tasks.map((task) => {
+    const visual = getTaskVisual(task.status);
+
+    return {
+      title: task.title,
+      time: formatTaskTime(task.due_date),
+      ...visual,
+    };
+  });
 
   const monthName = visibleMonth.toLocaleString("es-ES", {
     month: "long",
@@ -83,7 +111,7 @@ export default function CalendarScreen() {
       return new Date(
         prev.getFullYear(),
         prev.getMonth() + (direction === "next" ? 1 : -1),
-        1
+        1,
       );
     });
   };
@@ -91,7 +119,6 @@ export default function CalendarScreen() {
   return (
     <ScreenContainer noPadding>
       <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
-        {/* Header */}
         <View
           style={{
             height: 68,
@@ -125,7 +152,6 @@ export default function CalendarScreen() {
             paddingBottom: 120,
           }}
         >
-          {/* Month */}
           <View
             style={{
               flexDirection: "row",
@@ -157,7 +183,6 @@ export default function CalendarScreen() {
             <MonthButton icon="chevron-forward" onPress={() => changeMonth("next")} />
           </View>
 
-          {/* Calendar card */}
           <View
             style={{
               backgroundColor: "#FFFFFF",
@@ -189,16 +214,16 @@ export default function CalendarScreen() {
             <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
               {calendarDays.map((date, index) => {
                 if (!date) {
-                  return <View key={`empty-${index}`} style={{ width: "14.28%", height: 44 }} />;
+                  return (
+                    <View
+                      key={`empty-${index}`}
+                      style={{ width: "14.28%", height: 44 }}
+                    />
+                  );
                 }
 
-                const isSelected =
-                  formatDateKey(date) === formatDateKey(selectedDate);
-
-                const isToday =
-                  formatDateKey(date) === formatDateKey(today);
-
-                const hasTasks = Boolean(mockTasks[formatDateKey(date)]?.length);
+                const isSelected = formatDateKey(date) === selectedKey;
+                const isToday = formatDateKey(date) === formatDateKey(today);
 
                 return (
                   <Pressable
@@ -232,13 +257,13 @@ export default function CalendarScreen() {
                         {date.getDate()}
                       </Text>
 
-                      {hasTasks && (
+                      {isSelected && calendarTasks.length > 0 && (
                         <View
                           style={{
                             width: 4,
                             height: 4,
                             borderRadius: 999,
-                            backgroundColor: isSelected ? "#FFFFFF" : "#FA541C",
+                            backgroundColor: "#FFFFFF",
                             marginTop: 3,
                           }}
                         />
@@ -250,7 +275,6 @@ export default function CalendarScreen() {
             </View>
           </View>
 
-          {/* Tasks title */}
           <View
             style={{
               flexDirection: "row",
@@ -280,12 +304,16 @@ export default function CalendarScreen() {
             </View>
           </View>
 
-          {tasks.length === 0 ? (
+          {loading ? (
+            <ActivityIndicator size="large" color="#FA541C" />
+          ) : error ? (
+            <EmptyState />
+          ) : calendarTasks.length === 0 ? (
             <EmptyState />
           ) : (
             <View style={{ gap: 14 }}>
-              {tasks.map((task, index) => (
-                <CalendarTaskRow key={index} {...task} />
+              {calendarTasks.map((task, index) => (
+                <TaskDayCard key={index} {...task} />
               ))}
             </View>
           )}
@@ -293,9 +321,4 @@ export default function CalendarScreen() {
       </View>
     </ScreenContainer>
   );
-}
-
-
-
-
-
+} 
