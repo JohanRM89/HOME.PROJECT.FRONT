@@ -1,12 +1,13 @@
 import { useAuthStore } from "@/modules/auth/ui/auth.store";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
+import { SearchInput } from "@/shared/components/home/SearchInput";
 import { PriorityFilter } from "@/shared/components/tasks/PriorityFilter";
 import { TaskRow } from "@/shared/components/tasks/TaskRow";
 import { useTasks } from "@/shared/hooks/useTask";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
-import { Pressable, ScrollView, TextInput, TouchableOpacity, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native-paper";
 
 const STATUS = ["Todos", "Pendiente", "En proceso", "Completada"];
@@ -16,86 +17,42 @@ export default function TasksScreen() {
   const [search, setSearch] = useState("");
   const user = useAuthStore((s) => s.user);
   const { tasks, loading, error } = useTasks(user?.id);
+  const MAX_VISIBLE_TASKS = 5;
+  const TASK_CARD_HEIGHT = 108;
 
+  const shouldScroll = tasks.length > MAX_VISIBLE_TASKS;
+
+  const priorityOptions = [
+    { label: "Todas", value: "all" },
+    { label: "Alta", value: "high" },
+    { label: "Media", value: "medium" },
+    { label: "Baja", value: "low" },
+  ];
+
+  const statusOptions = [
+    { label: "Todos", value: "all" },
+    { label: "Pendiente", value: "pending" },
+    { label: "En proceso", value: "in_progress" },
+    { label: "Completada", value: "completed" },
+  ];
+
+  const [priority, setPriority] = useState("all");
+  const [status, setStatus] = useState("all");
   return (
     <ScreenContainer>
       <View style={{ flex: 1 }}>
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: 120 }}
+          contentContainerStyle={{ paddingBottom: 120, paddingTop: 20 }}
         >
           {/* Search */}
-          <View
-            style={{
-              height: 48,
-              borderRadius: 14,
-              backgroundColor: "#F7F7F8",
-              paddingHorizontal: 14,
-              flexDirection: "row",
-              alignItems: "center",
-              marginTop: 8,
-              marginBottom: 14,
-            }}
-          >
-            <Ionicons name="search-outline" size={22} color="#94A3B8"
+          <SearchInput
+            value={search}
+            onChangeText={setSearch}
+            placeholder="Buscar tareas..."
+          />
 
-            />
-
-            <TextInput
-              value={search}
-              onChangeText={setSearch}
-              placeholder="Buscar tareas..."
-              placeholderTextColor="#A8B3C7"
-              style={{
-                flex: 1,
-                marginLeft: 8,
-                fontSize: 15,
-                color: "#111827",
-                fontWeight: "500",
-                paddingVertical: 0,
-              }}
-            />
-          </View>
-
-          {/* Status filters */}
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              gap: 8,
-              paddingBottom: 26,
-            }}
-          >
-            {STATUS.map((status) => {
-              const active = statusFilter === status;
-
-              return (
-                <Pressable
-                  key={status}
-                  onPress={() => setStatusFilter(status)}
-                  style={{
-                    height: 36,
-                    paddingHorizontal: 18,
-                    borderRadius: 999,
-                    backgroundColor: active ? "#FA541C" : "#F4F4F5",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: active ? "#FFFFFF" : "#334155",
-                      fontSize: 13,
-                      fontWeight: "700",
-                    }}
-                  >
-                    {status}
-                  </Text>
-                </Pressable>
-              );
-            })}
-          </ScrollView>
-
+        
           {/* Priority filters */}
           <View
             style={{
@@ -107,8 +64,16 @@ export default function TasksScreen() {
               gap: 12,
             }}
           >
-            <PriorityFilter label="Prioridad Alta" />
-            <PriorityFilter label="Prioridad Media" />
+            <PriorityFilter label="Prioridad"
+              value={priority}
+              options={priorityOptions}
+              onChange={setPriority}
+              icon="flag-outline" />
+            <PriorityFilter label="Estado"
+              value={status}
+              options={statusOptions}
+              onChange={setStatus}
+              icon="layers-outline" />
           </View>
 
           {/* Tasks */}
@@ -116,45 +81,84 @@ export default function TasksScreen() {
 
           <View style={{ gap: 14 }}>
 
-            {tasks.map((task) => (
-              <TaskRow
-                key={task.id}
-                title={task.title}
-                date={task.due_date}
-                status={task.status === "pending" ? "Pendiente" : task.status === "in_progress" ? "En proceso" : "Completada"}
-                onPress={() =>
+            {tasks.length === 0 ? (
+              <View
+                style={{
+                  backgroundColor: "#FFFFFF",
+                  borderRadius: 18,
+                  borderWidth: 1,
+                  borderColor: "#EEF2F7",
+                  paddingVertical: 34,
+                  paddingHorizontal: 24,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <View
+                  style={{
+                    width: 68,
+                    height: 68,
+                    borderRadius: 999,
+                    backgroundColor: "#FFF1E8",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginBottom: 18,
+                  }}
+                >
+                  <Ionicons
+                    name="clipboard-outline"
+                    size={32}
+                    color="#FA541C"
+                  />
+                </View>
 
-                  router.push({
-                    pathname: "/(details)/tasks_detail",
-                    params: { taskId: task.id },
-                  })
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontWeight: "900",
+                    color: "#111827",
+                    marginBottom: 8,
+                  }}
+                >
+                  No hay tareas por ahora
+                </Text>
 
-                }
+                <Text
+                  style={{
+                    fontSize: 15,
+                    lineHeight: 22,
+                    color: "#64748B",
+                    textAlign: "center",
+                  }}
+                >
+                  Todo está al día. Cuando tengas nuevas tareas aparecerán aquí.                </Text>
+              </View>
+            ) : (
+              <ScrollView
+                scrollEnabled={shouldScroll}
+                showsVerticalScrollIndicator={false}
+              >
+                <View style={{ gap: 14, paddingRight: 4 }}>
+                  {tasks.map((task) => (
+                    <TaskRow
+                      key={task.id}
+                      title={task.title}
+                      date={task.due_date}
+                      status={task.status === "pending" ? "Pendiente" : task.status === "in_progress" ? "En proceso" : "Completada"}
+                      onPress={() =>
 
-              />
-            ))}
+                        router.push({
+                          pathname: "/(details)/tasks_detail",
+                          params: { taskId: task.id },
+                        })
 
-            {/* 
-            <TaskRow
-              title="Pagar factura de luz"
-              date="COMPLETADA"
-              status="Completada"
-              disabled
-            />
+                      }
 
-            <TaskRow
-              title="Organizar despensa de cocina"
-              date="MAÑANA"
-              tag="INTERIOR"
-              status="Pendiente"
-            />
-
-            <TaskRow
-              title="Reparar grifo baño principal"
-              date="EN PROCESO"
-              status="En proceso"
-              highlighted
-            /> */}
+                    />
+                  ))}
+                </View>
+              </ScrollView>
+            )}
           </View>
         </ScrollView>
 

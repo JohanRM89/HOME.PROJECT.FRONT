@@ -1,4 +1,4 @@
-import { CreateCommentTask } from "../domain/ITaskRepository";
+import { CreateCommentTask, ISendDataTask } from "../domain/ITaskRepository";
 import { TaskRepository } from "../domain/TaskRepository";
 
 export class TaskUseCase {
@@ -71,5 +71,16 @@ export class TaskUseCase {
   }
   async getCalendarTasksByDay(groupId: string, selectedDay: string) {
     return this.repository.getCalendarTasksByDay(groupId, selectedDay);
+  }
+  async createTask(data: ISendDataTask) {
+    try {
+      return await this.repository.postCreateTask(data);
+    } catch (error: any) {
+      const apiMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "No se puede crear la tarea";
+      throw new Error(apiMessage);
+    }
   }
 }

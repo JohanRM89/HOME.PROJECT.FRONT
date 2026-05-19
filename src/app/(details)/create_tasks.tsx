@@ -15,10 +15,17 @@ import { Text } from "react-native-paper";
 import { z } from "zod";
 
 import { useAuthStore } from "@/modules/auth/ui/auth.store";
+import { TaskUseCase } from "@/modules/tasks/application/task.usecase";
+import { TaskApi } from "@/modules/tasks/infraestructure/task.api";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
+import { CategorySelect } from "@/shared/components/member/categorySelect";
+import { MemberSelect } from "@/shared/components/member/memberSelect";
 import { ErrorText } from "@/shared/components/tasks/ErrorText";
 import { FieldLabel } from "@/shared/components/tasks/FieldLabel";
 import { PriorityButton } from "@/shared/components/tasks/PriorityButton";
+import { useCategoriesFamily } from "@/shared/hooks/useCategoriesFamily";
+import { useMembersFamily } from "@/shared/hooks/useMembersFamily";
+import { inputTextStyle, inputWrapperStyle } from "@/shared/theme/theme.conf";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
 import { Platform } from "react-native";
@@ -36,29 +43,22 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-const members = [
-    {
-        id: "6f4d5b66-c1ff-4615-89fb-fafee0fafeee",
-        name: "Ana",
-    },
-    {
-        id: "7f4d5b66-c1ff-4615-89fb-fafee0fafeee",
-        name: "Carlos",
-    },
-    {
-        id: "8f4d5b66-c1ff-4615-89fb-fafee0fafeee",
-        name: "María",
-    },
-];
+
 export default function CreateTasksScreen() {
     const user = useAuthStore((s) => s.user);
+    const memberid = useAuthStore((s) => s.memberid);
+
     const [showDatePicker, setShowDatePicker] = useState(false);
+    const { members, error_members, loading_members, reload } = useMembersFamily(memberid);
+    const { categories, error_categories, loading_categories, reload: reloadCategories } = useCategoriesFamily(memberid);
 
     const {
         control,
         handleSubmit,
         setValue,
         watch,
+        reset,
+
         formState: { errors, isSubmitting },
     } = useForm<FormData>({
         resolver: zodResolver(schema),
@@ -68,8 +68,8 @@ export default function CreateTasksScreen() {
             priority: "medium",
             due_date: "",
             assigned_to: "",
-            group_id: "b5fac823-7305-46e9-ad30-a8d6c32fe57b",
-            category_id: "b672dfe8-31c1-4c10-87f0-e59baba08922",
+            group_id: memberid ?? "",
+            category_id: "",
         },
     });
 
@@ -77,19 +77,36 @@ export default function CreateTasksScreen() {
     const priority = watch("priority");
 
     const onSubmit = async (data: FormData) => {
-        console.log("Nueva tarea:", data);
+        try {
+            const useCase = new TaskUseCase(new TaskApi());
+            const response = await useCase.createTask(data);
+            if (response.ok) {
+                //poner mensje de exito 
+                reset({
+                    title: "",
+                    description: "",
+                    priority: "medium",
+                    due_date: "",
+                    assigned_to: "",
+                    group_id: memberid ?? "",
+                    category_id: "",
+                });
+                router.replace("/(main)/tasks");
+            }
+        } catch (error) {
 
+        }
         // Aquí llamas tu servicio/API
         // await createTask(data);
 
-        router.back();
+        //  router.back();
     };
 
     return (
         <ScreenContainer>
             <ScrollView
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: 40 }}
+                contentContainerStyle={{ paddingBottom: 20, paddingTop: 20 }}
             >
                 {/* Header */}
                 <View
@@ -125,13 +142,22 @@ export default function CreateTasksScreen() {
                     control={control}
                     name="title"
                     render={({ field: { value, onChange } }) => (
-                        <TextInput
-                            value={value}
-                            onChangeText={onChange}
-                            placeholder="Ej. Comprar materiales para el jardín"
-                            placeholderTextColor="#94A3B8"
-                            style={inputStyle}
-                        />
+                        <View style={inputWrapperStyle}>
+
+                            <TextInput
+                                value={value}
+                                onChangeText={onChange}
+                                placeholder="Ej. Comprar materiales para el jardín"
+                                placeholderTextColor="#94A3B8"
+                                style={[
+                                    inputTextStyle,
+                                    Platform.OS === "web" &&
+                                    ({
+                                        outlineWidth: 0,
+                                        outlineColor: "transparent",
+                                    } as any),
+                                ]} />
+                        </View>
                     )}
                 />
 
@@ -144,19 +170,41 @@ export default function CreateTasksScreen() {
                     control={control}
                     name="description"
                     render={({ field: { value, onChange } }) => (
-                        <TextInput
-                            value={value}
-                            onChangeText={onChange}
-                            placeholder="Detalla lo que se debe hacer en esta tarea..."
-                            placeholderTextColor="#94A3B8"
-                            multiline
-                            textAlignVertical="top"
+                        <View
                             style={{
-                                ...inputStyle,
-                                height: 120,
-                                paddingTop: 18,
+                                minHeight: 140,
+                                borderRadius: 14,
+                                borderWidth: 1,
+                                borderColor: "#E2E8F0",
+                                backgroundColor: "#FFFFFF",
+                                paddingHorizontal: 16,
+                                paddingVertical: 14,
                             }}
-                        />
+                        >
+                            <TextInput
+                                value={value}
+                                onChangeText={onChange}
+                                placeholder="Detalla lo que se debe hacer en esta tarea..."
+                                placeholderTextColor="#94A3B8"
+                                multiline
+                                textAlignVertical="top"
+                                underlineColorAndroid="transparent"
+                                style={[
+                                    {
+                                        minHeight: 110,
+                                        fontSize: 16,
+                                        color: "#111827",
+                                        padding: 0,
+                                    },
+
+                                    Platform.OS === "web" &&
+                                    ({
+                                        outlineWidth: 0,
+                                        outlineColor: "transparent",
+                                    } as any),
+                                ]}
+                            />
+                        </View>
                     )}
                 />
 
@@ -194,91 +242,123 @@ export default function CreateTasksScreen() {
                         Asignarme a mí
                     </Text>
                 </Pressable>
+                {members?.data?.length !== 0 && (
+                    <MemberSelect
+                        value={assignedTo}
+                        members={members?.data}
+                        onChange={(memberId) =>
+                            setValue("assigned_to", memberId, {
+                                shouldValidate: true,
+                            })
+                        }
+                    />
+                )}
+                <View style={{ marginTop: 12 }} >
 
-                <View style={{ flexDirection: "row", gap: 10, marginBottom: 8 }}>
-                    {members.map((member) => {
-                        const active = assignedTo === member.id;
+                    <CategorySelect
+                        value={watch("category_id")}
+                        categories={categories?.data ?? []}
+                        onChange={(categoryId) =>
+                            setValue("category_id", categoryId, {
+                                shouldValidate: true,
+                            })
+                        }
+                    />
 
-                        return (
-                            <Pressable
-                                key={member.id}
-                                onPress={() =>
-                                    setValue("assigned_to", member.id, {
-                                        shouldValidate: true,
-                                    })
-                                }
-                                style={{
-                                    paddingHorizontal: 14,
-                                    height: 42,
-                                    borderRadius: 999,
-                                    borderWidth: 1,
-                                    borderColor: active ? "#FA541C" : "#E5E7EB",
-                                    backgroundColor: active ? "#FFF1E8" : "#FFFFFF",
-                                    justifyContent: "center",
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        color: active ? "#FA541C" : "#64748B",
-                                        fontWeight: "700",
-                                    }}
-                                >
-                                    {member.name}
-                                </Text>
-                            </Pressable>
-                        );
-                    })}
                 </View>
-
                 {errors.assigned_to && <ErrorText text={errors.assigned_to.message} />}
 
                 {/* Fecha */}
                 <FieldLabel label="Fecha límite" />
+
                 <Controller
                     control={control}
                     name="due_date"
                     render={({ field: { value, onChange } }) => (
                         <>
                             {Platform.OS === "web" ? (
-                                <TextInput
-                                    value={value}
-                                    onChangeText={onChange}
-                                    placeholder="yyyy-mm-dd"
-                                    placeholderTextColor="#94A3B8"
-                                    style={inputStyle}
-                                />
-                            ) : (
-                                <>
+                                <View style={{ position: "relative" }}>
+                                    {/* Input visual */}
                                     <Pressable
-                                        onPress={() => setShowDatePicker(true)}
-                                        style={{
-                                            height: 56,
-                                            borderRadius: 12,
-                                            borderWidth: 1,
-                                            borderColor: "#FED7C3",
-                                            backgroundColor: "#FFFFFF",
-                                            paddingHorizontal: 16,
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            justifyContent: "space-between",
+                                        onPress={() => {
+                                            const input = document.getElementById(
+                                                "due-date-input"
+                                            ) as HTMLInputElement | null;
+
+                                            input?.showPicker?.();
+                                            input?.click();
                                         }}
+                                        style={inputWrapperStyle}
                                     >
+                                        <Ionicons
+                                            name="calendar-outline"
+                                            size={20}
+                                            color="#FA541C"
+                                        />
+
                                         <Text
                                             style={{
+                                                marginLeft: 12,
                                                 fontSize: 16,
                                                 color: value ? "#111827" : "#94A3B8",
                                             }}
                                         >
                                             {value || "Selecciona una fecha"}
                                         </Text>
+                                    </Pressable>
 
-                                        <Ionicons name="calendar-outline" size={22} color="#FA541C" />
+                                    {/* Input real oculto */}
+                                    <input
+                                        id="due-date-input"
+                                        type="date"
+                                        value={value}
+                                        min={new Date().toISOString().split("T")[0]}
+                                        onChange={(e) => onChange(e.target.value)}
+                                        style={{
+                                            position: "absolute",
+                                            opacity: 0,
+                                            pointerEvents: "none",
+                                            width: 0,
+                                            height: 0,
+                                        }}
+                                    />
+                                </View>
+                            ) : (
+                                <>
+                                    <Pressable
+                                        onPress={() => setShowDatePicker(true)}
+                                        style={inputWrapperStyle}
+                                    >
+                                        <View
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                                flex: 1,
+                                            }}
+                                        >
+                                            <Ionicons
+                                                name="calendar-outline"
+                                                size={20}
+                                                color="#FA541C"
+                                            />
+
+                                            <Text
+                                                style={{
+                                                    marginLeft: 12,
+                                                    fontSize: 16,
+                                                    color: value ? "#111827" : "#94A3B8",
+                                                }}
+                                            >
+                                                {value || "Selecciona una fecha"}
+                                            </Text>
+                                        </View>
                                     </Pressable>
 
                                     {showDatePicker && (
                                         <DateTimePicker
                                             value={value ? new Date(value) : new Date()}
                                             mode="date"
+                                            display="calendar"
                                             minimumDate={new Date()}
                                             onChange={(_, selectedDate) => {
                                                 setShowDatePicker(false);
@@ -388,13 +468,3 @@ export default function CreateTasksScreen() {
     );
 }
 
-const inputStyle = {
-    height: 56,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#FED7C3",
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 16,
-    fontSize: 16,
-    color: "#111827",
-};

@@ -1,6 +1,8 @@
 import { httpClient } from "@/shared/api/httpClients";
 import {
   CreateCommentTask,
+  ISendDataTask,
+  ResponseDataCreateTask,
   ResponseDataListaTareas,
   ResponseMessageData,
   ResponseTareas,
@@ -43,5 +45,9 @@ export class TaskApi implements TaskRepository {
     );
 
     return response.data;
+  }
+  async postCreateTask(data: ISendDataTask): Promise<ResponseDataCreateTask> {
+    const { data: responseData } = await httpClient.post("/tasks", data);
+    return responseData;
   }
 }

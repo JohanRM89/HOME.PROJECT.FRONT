@@ -82,3 +82,19 @@ export interface ITaskRepository {
     selectedDay: string,
   ): Promise<DataListaTareas[]>;
 }
+
+export interface ISendDataTask {
+  title: string;
+  description: string;
+  priority: string;
+  due_date: string;
+  assigned_to: string;
+  group_id: string;
+  category_id: string;
+}
+
+export interface ResponseDataCreateTask {
+  data: DataListaTareas[];
+  ok: boolean;
+  message: string;
+}
