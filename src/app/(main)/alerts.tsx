@@ -1,14 +1,26 @@
+import { useAuthStore } from "@/modules/auth/ui/auth.store";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
+import { useCaseNotifications } from "@/shared/hooks/useCaseNotifications";
+import { getNotificationUI } from "@/shared/ultis/notificationUI";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { Text } from "react-native-paper";
 
-const FILTERS = ["Todas", "Tareas", "Alertas", "Familia"];
+const FILTERS = [
+  'task_assigned',
+  'task_completed',
+  'task_created',
+  'due_date',
+  'alert',
+  'family',
+  'report'
+];
 
 export default function AlertsScreen() {
   const [filter, setFilter] = useState("Todas");
-
+  const memberid = useAuthStore((s) => s.memberid);
+  const { notificacions, loading_notificacions, error_notificacions, reload } = useCaseNotifications(memberid);
   return (
     <ScreenContainer noPadding>
       <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
@@ -25,7 +37,7 @@ export default function AlertsScreen() {
             justifyContent: "space-between",
           }}
         >
-      
+
 
           <Text style={{ fontSize: 20, fontWeight: "900", color: "#111827" }}>
             Notificaciones
@@ -80,48 +92,83 @@ export default function AlertsScreen() {
             })}
           </ScrollView>
 
-          <SectionTitle title="HOY" />
+          <SectionTitle title="Tus notificaciones " />
+          {notificacions?.data.length === 0 ? (
+            <View
+              style={{
+                backgroundColor: "#FFFFFF",
+                borderRadius: 18,
+                borderWidth: 1,
+                borderColor: "#EEF2F7",
+                paddingVertical: 34,
+                paddingHorizontal: 24,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <View
+                style={{
+                  width: 68,
+                  height: 68,
+                  borderRadius: 999,
+                  backgroundColor: "#FFF1E8",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: 18,
+                }}
+              >
+                <Ionicons
+                  name="clipboard-outline"
+                  size={32}
+                  color="#FA541C"
+                />
+              </View>
 
-          <AlertRow
-            icon="checkmark-circle-outline"
-            iconColor="#22C55E"
-            iconBg="#DCFCE7"
-            title="Juan completó Lavar platos"
-            description="¡Buen trabajo! Una tarea menos en la lista familiar."
-            time="10m"
-            unread
-          />
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "900",
+                  color: "#111827",
+                  marginBottom: 8,
+                }}
+              >
+                No hay notificaciones
+              </Text>
 
-          <AlertRow
-            icon="briefcase-outline"
-            iconColor="#FA541C"
-            iconBg="#FFECE5"
-            title="Nueva tarea asignada"
-            description="Se te ha asignado: 'Limpiar el jardín'."
-            time="1h"
-            unread
-          />
+              <Text
+                style={{
+                  fontSize: 15,
+                  lineHeight: 22,
+                  color: "#64748B",
+                  textAlign: "center",
+                }}
+              >
+                Cuando tengas nuevas notificaciones aparecerán aquí.
+              </Text>
+            </View>
+          ) : (<>
 
-          <AlertRow
-            icon="notifications-outline"
-            iconColor="#FA541C"
-            iconBg="#FFF7ED"
-            title="Recordatorio urgente"
-            description="Recordatorio: La tarea 'Sacar la basura' vence hoy."
-            time="3h"
-          />
 
-          <SectionTitle title="AYER" />
+            {notificacions?.data.map((noti, index) => {
+              const ui = getNotificationUI(noti);
 
-          <AlertRow
-            icon="people-outline"
-            iconColor="#94A3B8"
-            iconBg="#F1F5F9"
-            title="María se unió al grupo"
-            description="Ahora puede colaborar en las tareas del hogar."
-            time="24h"
-            muted
-          />
+              return (
+                <AlertRow
+                  key={index}
+                  icon={ui.icon}
+                  iconColor={ui.iconColor}
+                  iconBg={ui.iconBg}
+                  title={ui.title}
+                  description={ui.description}
+                  unread={!noti.is_read}
+                />
+              );
+            })}
+
+
+          </>)
+          }
+    
         </ScrollView>
       </View>
     </ScreenContainer>
@@ -159,21 +206,27 @@ function AlertRow({
   iconBg: string;
   title: string;
   description: string;
-  time: string;
+  time?: string;
   unread?: boolean;
   muted?: boolean;
 }) {
   return (
+
     <Pressable
       style={{
         minHeight: 82,
         flexDirection: "row",
         alignItems: "flex-start",
         paddingVertical: 14,
-        borderBottomWidth: 1,
-        borderBottomColor: "#F1F5F9",
+        paddingHorizontal: 14,
+        backgroundColor: unread ? "#FFFFFF" : "#F8FAFC",
+        borderRadius: 14,
+        borderWidth: 1,
+        borderColor: unread ? iconColor: "#E2E8F0",
+        marginBottom: 12,
       }}
     >
+
       <View
         style={{
           width: 48,
