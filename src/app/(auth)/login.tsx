@@ -1,7 +1,9 @@
+import LoginBanner from "@/assets/images/banner.png";
 import { AuthUseCase } from "@/modules/auth/application/auth.usecase";
 import { AuthApi } from "@/modules/auth/infrastructure/auth.api";
 import { useAuthStore } from "@/modules/auth/ui/auth.store";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
+import { inputTextStyle, inputWrapperStyle } from "@/shared/theme/theme.conf";
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "expo-router";
@@ -9,6 +11,7 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   ImageBackground,
+  Platform,
   TextInput as RNTextInput,
   ScrollView,
   TouchableOpacity,
@@ -21,7 +24,6 @@ const schema = z.object({
   email: z.string().email("Correo inválido"),
   password: z.string().min(6, "Mínimo 6 caracteres"),
 });
-
 type FormData = z.infer<typeof schema>;
 
 export default function LoginScreen() {
@@ -107,15 +109,16 @@ export default function LoginScreen() {
           }}
         >
           <ImageBackground
-            source={{
-              uri: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=900",
+            source={LoginBanner}
+            imageStyle={{
+              borderRadius: 14,
             }}
-            imageStyle={{ borderRadius: 6 }}
             style={{
-              height: 122,
+              height: 150,
               justifyContent: "flex-end",
               marginBottom: 28,
               overflow: "hidden",
+              width: "100%",
             }}
           >
             <View
@@ -142,7 +145,7 @@ export default function LoginScreen() {
             control={control}
             name="email"
             render={({ field: { onChange, value } }) => (
-              <View style={inputWrapper}>
+              <View style={inputWrapperStyle}>
                 <Ionicons name="mail-outline" size={20} color="#94A3B8" />
                 <RNTextInput
                   value={value}
@@ -151,7 +154,15 @@ export default function LoginScreen() {
                   placeholderTextColor="#94A3B8"
                   autoCapitalize="none"
                   keyboardType="email-address"
-                  style={inputStyle}
+                  underlineColorAndroid="transparent"
+                  style={[
+                    inputTextStyle,
+                    Platform.OS === "web" &&
+                    ({
+                      outlineWidth: 0,
+                      outlineColor: "transparent",
+                    } as any),
+                  ]}
                 />
               </View>
             )}
@@ -165,7 +176,7 @@ export default function LoginScreen() {
             control={control}
             name="password"
             render={({ field: { onChange, value } }) => (
-              <View style={inputWrapper}>
+              <View style={inputWrapperStyle}>
                 <Ionicons name="lock-closed-outline" size={20} color="#94A3B8" />
                 <RNTextInput
                   value={value}
@@ -173,7 +184,14 @@ export default function LoginScreen() {
                   placeholder="••••••••"
                   placeholderTextColor="#94A3B8"
                   secureTextEntry={!showPassword}
-                  style={inputStyle}
+                  style={[
+                    inputTextStyle,
+                    Platform.OS === "web" &&
+                    ({
+                      outlineWidth: 0,
+                      outlineColor: "transparent",
+                    } as any),
+                  ]}
                 />
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
                   <Ionicons
@@ -222,49 +240,6 @@ export default function LoginScreen() {
             </Text>
 
             <Ionicons name="log-in-outline" size={22} color="#FFFFFF" />
-          </TouchableOpacity>
-
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginVertical: 28,
-            }}
-          >
-            <View style={{ flex: 1, height: 1, backgroundColor: "#E5E7EB" }} />
-            <Text
-              style={{
-                marginHorizontal: 14,
-                color: "#94A3B8",
-                fontSize: 12,
-                fontWeight: "900",
-                letterSpacing: 1,
-              }}
-            >
-              O CONTINÚA CON
-            </Text>
-            <View style={{ flex: 1, height: 1, backgroundColor: "#E5E7EB" }} />
-          </View>
-
-          <TouchableOpacity
-            activeOpacity={0.85}
-            style={{
-              height: 50,
-              borderRadius: 7,
-              borderWidth: 1,
-              borderColor: "#DDE3EA",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "row",
-              gap: 12,
-            }}
-          >
-            <Text style={{ fontSize: 18, fontWeight: "900", color: "#4285F4" }}>
-              G
-            </Text>
-            <Text style={{ fontSize: 16, fontWeight: "800", color: "#334155" }}>
-              Google
-            </Text>
           </TouchableOpacity>
 
           {apiError && (
@@ -326,10 +301,3 @@ const inputWrapper = {
   backgroundColor: "#FFFFFF",
 };
 
-const inputStyle = {
-  flex: 1,
-  marginLeft: 12,
-  fontSize: 16,
-  color: "#111827",
-  paddingVertical: 0,
-};

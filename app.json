@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "HOME.PROJECT.FRONT",
-    "slug": "HOME.PROJECT.FRONT",
+    "name": "HomeTask",
+    "slug": "hometask-front",
+    "owner": "johanromero",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -17,7 +18,8 @@
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.johanromero.hometaskfront"
     },
     "web": {
       "output": "static",
@@ -35,11 +37,20 @@
           }
         }
       ],
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      "expo-image",
+      "expo-secure-store",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "187dd3f6-af0b-47dd-924f-efa2ee5e9b7c"
+      }
     }
   }
 }

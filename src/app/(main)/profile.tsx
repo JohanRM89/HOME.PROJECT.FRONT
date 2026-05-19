@@ -11,11 +11,10 @@ export default function ProfileScreen() {
   const logout = useAuthStore((s) => s.logout);
 
   const handleLogout = async () => {
-    console.log("Dentor de cerrar")
-    await logout();
+     await logout();
 
-    // ✅ elimina historial y manda a login
-    router.replace("/(auth)/login");
+    // // ✅ elimina historial y manda a login
+     router.replace("/(auth)/login");
   };
 
   return (
@@ -141,8 +140,7 @@ export default function ProfileScreen() {
                 title="Cerrar sesión"
                 danger
                 hideChevron
-                
-  onPress={handleLogout}
+                  onPress={handleLogout}
 
               />
           </View>
@@ -180,12 +178,14 @@ function ProfileOption({
   subtitle?: string;
   danger?: boolean;
   hideChevron?: boolean;
-   onPress?: () => void; 
+    onPress?: () => void;
+
 }) {
   return (
     <TouchableOpacity
       activeOpacity={0.85}
-      onPress={onPress}
+            onPress={onPress}
+
       style={{
         minHeight: 72,
         backgroundColor: "#FFFFFF",

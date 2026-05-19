@@ -16,7 +16,7 @@ export interface AuthState {
   }) => Promise<void>;
 
   logout: () => Promise<void>;
-
+  setMemberId: (memberid: string) => Promise<void>;
   hydrate: (
     data: {
       user: User;

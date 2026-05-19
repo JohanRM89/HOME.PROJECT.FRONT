@@ -10,6 +10,25 @@ export interface ResponseGetData {
   message: string;
   data: resetGetData;
 }
+export interface ResponseFamilyGrpup {
+  ok: boolean;
+  message: string;
+  data: MemebersData[];
+}
+
+export interface ResponseGetDataCategories {
+  ok: boolean;
+  message: string;
+  data: Categories[];
+}
+export interface Categories {
+  id: string;
+  group_id: string;
+  name: string;
+  icon: string;
+  color: string;
+  created_at: string;
+}
 export interface resetGetData {
   id: string;
   name: string;
@@ -21,6 +40,7 @@ export interface resetGetData {
 }
 
 export interface MemebersData {
+  id: string;
   name: string;
   email: string;
   role: string;
@@ -77,4 +97,17 @@ export interface CuantData {
   completed_tasks: number;
   pending_tasks: number;
   in_progress_tasks: number;
+}
+
+export interface ResponseCreateFamily {
+  ok: boolean;
+  message: string;
+  data: dataCreatedFamily;
+}
+
+export interface dataCreatedFamily {
+  name: string;
+  create_by: string;
+  invitation_code: string;
+  id: string;
 }

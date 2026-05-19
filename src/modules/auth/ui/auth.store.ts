@@ -7,7 +7,7 @@ import * as storage from "@/shared/storage/secureStorage";
 
 const STORAGE_KEY = "auth-storage";
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   token: null,
   expiresAt: null,
@@ -26,7 +26,23 @@ export const useAuthStore = create<AuthState>((set) => ({
       memberid: data.memberid,
     });
   },
+  setMemberId: async (memberid: string) => {
+    const currentState = get();
 
+    const dataToSave = {
+      user: currentState.user,
+      token: currentState.token,
+      expiresAt: currentState.expiresAt,
+      memberid,
+    };
+
+    await storage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+
+    set({
+      memberid,
+      isHydrated: true,
+    });
+  },
   logout: async () => {
     await storage.deleteItem(STORAGE_KEY);
     set({

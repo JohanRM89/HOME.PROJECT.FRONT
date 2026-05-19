@@ -27,7 +27,7 @@ export function SectionHeader({
                 {title}
             </Text>
 
-            <Text
+            {/* <Text
                 style={{
                     color: "#F97316",
                     fontWeight: "700",
@@ -35,7 +35,7 @@ export function SectionHeader({
                 }}
             >
                 Ver todo
-            </Text>
+            </Text> */}
         </View>
     );
 }

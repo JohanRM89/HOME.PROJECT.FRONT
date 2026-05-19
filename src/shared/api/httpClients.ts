@@ -9,6 +9,14 @@ const BASE_URL =
     ? "http://10.0.2.2:3000/api"
     : "http://localhost:3000/api";
 
+/***
+     * const BASE_URL =
+  Platform.OS === "android"
+    ? "https://hometask-back.onrender.com/api"
+    : "https://hometask-back.onrender.com/api";
+     * 
+     * 
+     */
 export const httpClient = axios.create({
   baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },

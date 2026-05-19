@@ -1,16 +1,18 @@
 import { AuthUseCase } from "@/modules/auth/application/auth.usecase";
 import { AuthApi } from "@/modules/auth/infrastructure/auth.api";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
+import { inputTextStyle } from "@/shared/theme/theme.conf";
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
-    TextInput as RNTextInput,
-    ScrollView,
-    TouchableOpacity,
-    View,
+  Platform,
+  TextInput as RNTextInput,
+  ScrollView,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { HelperText, Text } from "react-native-paper";
 import { z } from "zod";
@@ -213,13 +215,15 @@ export default function ForgotPasswordScreen() {
                       placeholderTextColor="#94A3B8"
                       autoCapitalize="none"
                       keyboardType="email-address"
-                      style={{
-                        flex: 1,
-                        marginLeft: 12,
-                        fontSize: 16,
-                        color: "#111827",
-                        paddingVertical: 0,
-                      }}
+                      underlineColorAndroid="transparent"
+                      style={[
+                        inputTextStyle,
+                        Platform.OS === "web" &&
+                        ({
+                          outlineWidth: 0,
+                          outlineColor: "transparent",
+                        } as any),
+                      ]}
                     />
                   </View>
                 )}

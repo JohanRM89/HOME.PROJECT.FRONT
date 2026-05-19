@@ -1,16 +1,18 @@
 import { AuthUseCase } from "@/modules/auth/application/auth.usecase";
 import { AuthApi } from "@/modules/auth/infrastructure/auth.api";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
+import { inputTextStyle } from "@/shared/theme/theme.conf";
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, router } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
-    TextInput as RNTextInput,
-    ScrollView,
-    TouchableOpacity,
-    View,
+  Platform,
+  TextInput as RNTextInput,
+  ScrollView,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { HelperText, Text } from "react-native-paper";
 import { z } from "zod";
@@ -84,7 +86,7 @@ export default function RegisterScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             paddingHorizontal: 20,
-            paddingVertical: 72,
+            paddingVertical: 10,
             flexGrow: 1,
             justifyContent: "center",
           }}
@@ -117,7 +119,8 @@ export default function RegisterScreen() {
               }}
             >
               <TouchableOpacity
-                onPress={() => router.back()}
+                onPress={() => router.push("/(auth)/login")
+                }
                 style={{ position: "absolute", left: 0 }}
               >
                 <Ionicons name="arrow-back" size={24} color="#111827" />
@@ -316,20 +319,23 @@ function FormInput({
             <Ionicons name={icon} size={20} color="#94A3B8" />
 
             <RNTextInput
-              value={value}
+              value={value ?? ""}
               onChangeText={onChange}
               placeholder={placeholder}
               placeholderTextColor="#94A3B8"
               secureTextEntry={secureTextEntry}
               keyboardType={keyboardType}
               autoCapitalize={autoCapitalize}
-              style={{
-                flex: 1,
-                marginLeft: 12,
-                fontSize: 16,
-                color: "#111827",
-                paddingVertical: 0,
-              }}
+              autoCorrect={false}
+              underlineColorAndroid="transparent"
+              style={[
+                inputTextStyle,
+                Platform.OS === "web" &&
+                ({
+                  outlineWidth: 0,
+                  outlineColor: "transparent",
+                } as any),
+              ]}
             />
 
             {rightIcon && (
