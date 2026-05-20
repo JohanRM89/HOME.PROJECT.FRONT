@@ -25,6 +25,7 @@ import { FieldLabel } from "@/shared/components/tasks/FieldLabel";
 import { PriorityButton } from "@/shared/components/tasks/PriorityButton";
 import { useCategoriesFamily } from "@/shared/hooks/useCategoriesFamily";
 import { useMembersFamily } from "@/shared/hooks/useMembersFamily";
+import { useToastStore } from "@/shared/storage/useToastStore";
 import { inputTextStyle, inputWrapperStyle } from "@/shared/theme/theme.conf";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
@@ -51,6 +52,8 @@ export default function CreateTasksScreen() {
     const [showDatePicker, setShowDatePicker] = useState(false);
     const { members, error_members, loading_members, reload } = useMembersFamily(memberid);
     const { categories, error_categories, loading_categories, reload: reloadCategories } = useCategoriesFamily(memberid);
+
+    const showToast = useToastStore((s) => s.show);
 
     const {
         control,
@@ -92,8 +95,12 @@ export default function CreateTasksScreen() {
                     category_id: "",
                 });
                 router.replace("/(main)/tasks");
+
+                showToast("Se creo la tarea correctamente", "success");
+
             }
         } catch (error) {
+                showToast("Error al crear la tarea", "error");
 
         }
         // Aquí llamas tu servicio/API

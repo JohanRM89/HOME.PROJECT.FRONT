@@ -3,6 +3,7 @@ import { Stack } from "expo-router";
 
 import { useAuthStore } from "@/modules/auth/ui/auth.store";
 
+import { AppToast } from "@/shared/components/common/AppToast";
 import * as storage from "@/shared/storage/secureStorage";
 import { useEffect } from "react";
 import { View } from "react-native";
@@ -29,6 +30,7 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <PaperProvider theme={theme}>
         <View style={{ flex: 1}}>
+           <AppToast />
           <Stack screenOptions={{ headerShown: false }} />
         </View>
       </PaperProvider>

@@ -1,5 +1,6 @@
 import { useAuthStore } from "@/modules/auth/ui/auth.store";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
+import { useToastStore } from "@/shared/storage/useToastStore";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Image, ScrollView, TouchableOpacity, View } from "react-native";
@@ -9,12 +10,15 @@ export default function ProfileScreen() {
   const user = useAuthStore((s) => s.user);
 
   const logout = useAuthStore((s) => s.logout);
+  const showToast = useToastStore((s) => s.show);
 
   const handleLogout = async () => {
-     await logout();
+    await logout();
 
     // // ✅ elimina historial y manda a login
-     router.replace("/(auth)/login");
+    router.replace("/(auth)/login");
+    showToast("Se cerro la sesión correctamente", "success");
+
   };
 
   return (
@@ -134,15 +138,15 @@ export default function ProfileScreen() {
           <View style={{ gap: 4 }}>
 
 
-              <ProfileOption
+            <ProfileOption
 
-                icon="log-out-outline"
-                title="Cerrar sesión"
-                danger
-                hideChevron
-                  onPress={handleLogout}
+              icon="log-out-outline"
+              title="Cerrar sesión"
+              danger
+              hideChevron
+              onPress={handleLogout}
 
-              />
+            />
           </View>
         </ScrollView>
       </View>
@@ -178,13 +182,13 @@ function ProfileOption({
   subtitle?: string;
   danger?: boolean;
   hideChevron?: boolean;
-    onPress?: () => void;
+  onPress?: () => void;
 
 }) {
   return (
     <TouchableOpacity
       activeOpacity={0.85}
-            onPress={onPress}
+      onPress={onPress}
 
       style={{
         minHeight: 72,
