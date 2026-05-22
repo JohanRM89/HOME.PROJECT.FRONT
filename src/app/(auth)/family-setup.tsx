@@ -1,9 +1,8 @@
-// src/app/(auth)/family-setup.tsx
-
 import { useAuthStore } from "@/modules/auth/ui/auth.store";
 import { MemberCase } from "@/modules/members/application/member.case";
 import { MemeberApi } from "@/modules/members/infrastructure/memeber.api";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
+import { useToastStore } from "@/shared/storage/useToastStore";
 import { inputTextStyle, inputWrapper, labelStyle, primaryButton, primaryButtonText } from "@/shared/theme/theme.conf";
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,6 +31,7 @@ export default function FamilySetupScreen() {
     const [mode, setMode] = useState<"create" | "join">("create");
     const setMemberId = useAuthStore((s) => s.setMemberId);
     const isCreate = mode === "create";
+    const showToast = useToastStore((s) => s.show);
 
     const changeMode = (newMode: "create" | "join") => {
         setMode(newMode);
@@ -61,10 +61,11 @@ export default function FamilySetupScreen() {
             if (dataResponse) {
                 await setMemberId(dataResponse.id);
                 router.replace("/(main)");
+                showToast("Familia creada correctamente", "success");
 
             }
         } catch (error: any) {
-            setApiError(error.message);
+            showToast(error.message, "error");
         }
     };
 
@@ -79,11 +80,11 @@ export default function FamilySetupScreen() {
             if (dataResponse) {
                 await setMemberId(dataResponse.id);
                 router.replace("/(main)");
-
+                showToast("Te has unido a la familia correctamente", "success");
             }
 
         } catch (error: any) {
-            setApiError(error.message);
+            showToast(error.message, "error");
         }
     };
 

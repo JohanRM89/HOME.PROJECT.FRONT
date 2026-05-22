@@ -185,11 +185,11 @@ const random = Math.random();
               LISTA DE FAMILIARES
             </Text>
 
-            <TouchableOpacity>
+            {/* <TouchableOpacity>
               <Text style={{ color: "#FA541C", fontSize: 13, fontWeight: "800" }}>
                 Gestionar roles
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
           <View style={{ gap: 14 }}>

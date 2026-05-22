@@ -1,8 +1,8 @@
-import LoginBanner from "@/assets/images/banner.png";
 import { AuthUseCase } from "@/modules/auth/application/auth.usecase";
 import { AuthApi } from "@/modules/auth/infrastructure/auth.api";
 import { useAuthStore } from "@/modules/auth/ui/auth.store";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
+import { useToastStore } from "@/shared/storage/useToastStore";
 import { inputTextStyle, inputWrapperStyle } from "@/shared/theme/theme.conf";
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,12 +10,13 @@ import { Link } from "expo-router";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
+  Image,
   ImageBackground,
   Platform,
   TextInput as RNTextInput,
   ScrollView,
   TouchableOpacity,
-  View,
+  View
 } from "react-native";
 import { HelperText, Text } from "react-native-paper";
 import { z } from "zod";
@@ -30,6 +31,7 @@ export default function LoginScreen() {
   const loginStore = useAuthStore((s) => s.login);
   const [apiError, setApiError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const showToast = useToastStore((s) => s.show);
 
   const {
     control,
@@ -51,7 +53,7 @@ export default function LoginScreen() {
       const user = await useCase.execute(data.email, data.password);
       loginStore(user);
     } catch (error: any) {
-      setApiError(error.message);
+      showToast(error.message, "error");
     }
   };
 
@@ -71,7 +73,7 @@ export default function LoginScreen() {
               width: 64,
               height: 64,
               borderRadius: 12,
-              backgroundColor: "#FA541C",
+              backgroundColor: "#FFF1E8",
               justifyContent: "center",
               alignItems: "center",
               marginBottom: 18,
@@ -82,7 +84,14 @@ export default function LoginScreen() {
               elevation: 8,
             }}
           >
-            <Ionicons name="home-outline" size={32} color="#FFFFFF" />
+            <Image
+              source={require("@/assets/images/favicon.png")}
+              style={{
+                width: 90,
+                height: 90,
+                resizeMode: "contain",
+              }}
+            />
           </View>
 
           <Text style={{ fontSize: 32, fontWeight: "900", color: "#111827" }}>
@@ -109,7 +118,7 @@ export default function LoginScreen() {
           }}
         >
           <ImageBackground
-            source={LoginBanner}
+            source={require("@/assets/images/banner.png")}
             imageStyle={{
               borderRadius: 14,
             }}

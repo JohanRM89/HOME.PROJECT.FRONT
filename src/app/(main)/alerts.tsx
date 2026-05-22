@@ -54,7 +54,7 @@ export default function AlertsScreen() {
           }}
         >
           {/* Filtros */}
-          <ScrollView
+          {/* <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{
@@ -90,7 +90,7 @@ export default function AlertsScreen() {
                 </Pressable>
               );
             })}
-          </ScrollView>
+          </ScrollView> */}
 
           <SectionTitle title="Tus notificaciones " />
           {notificacions?.data.length === 0 ? (

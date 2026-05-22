@@ -2,6 +2,7 @@ import { useAuthStore } from "@/modules/auth/ui/auth.store";
 import { TaskUseCase } from "@/modules/tasks/application/task.usecase";
 import { CreateCommentTask } from "@/modules/tasks/domain/ITaskRepository";
 import { TaskApi } from "@/modules/tasks/infraestructure/task.api";
+import { httpClient } from "@/shared/api/httpClients";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
 import { CommentCard } from "@/shared/components/tasks/CommentCard";
 import { InfoCard } from "@/shared/components/tasks/InfoCard";
@@ -9,19 +10,33 @@ import { SectionTitle } from "@/shared/components/tasks/SectionTitle";
 import { StatusOption } from "@/shared/components/tasks/StatusOption";
 import { useComentsTask } from "@/shared/hooks/useCommentsTask";
 import { useDetailsTasks } from "@/shared/hooks/useDetailsTasks";
+import { useToastStore } from "@/shared/storage/useToastStore";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native-paper";
+
 export default function TaskDetailScreen() {
   const [showNoteInput, setShowNoteInput] = useState(false);
   const [note, setNote] = useState("");
   const { taskId } = useLocalSearchParams<{ taskId: string }>();
-  const { task_details, loading_group, error_group } = useDetailsTasks(taskId);
-  const { comments_task, loading_coment, error_coment, reload } = useComentsTask(taskId);
+  const {
+    task_details,
+    loading_group,
+    error_group,
+    reload: reloadTaskDetails,
+  } = useDetailsTasks(taskId);
+
+  const {
+    comments_task,
+    loading_coment,
+    error_coment,
+    reload: reloadComments,
+  } = useComentsTask(taskId);
   const useCase = new TaskUseCase(new TaskApi());
   const user = useAuthStore((s) => s.user);
+  const showToast = useToastStore((s) => s.show);
 
 
   const sendMessage = async () => {
@@ -32,12 +47,46 @@ export default function TaskDetailScreen() {
     }
     const dataSen = await useCase.createCommentTasks(objet);
     if (dataSen.message === "Comentario creado exitosamente") {
-      reload();
+      reloadComments();
       setNote("");
       setShowNoteInput(false);
     }
 
   }
+  const getNextStatus = (
+    status?: "pending" | "in_progress" | "completed"
+  ) => {
+    if (status === "pending") return "in_progress";
+    if (status === "in_progress") return "completed";
+    return null;
+  };
+  const [updatingStatus, setUpdatingStatus] = useState(false);
+  type TaskStatus = "pending" | "in_progress" | "completed";
+  const handleNextStatus = async () => {
+    const nextStatus = getNextStatus(task_details?.status as TaskStatus);
+
+    if (!nextStatus || !taskId || updatingStatus) return;
+
+    try {
+      setUpdatingStatus(true);
+
+      await httpClient.put(`/tasks/${taskId}/status`, {
+        status: nextStatus,
+      });
+      showToast("Estado actualizado correctamente", "success");
+
+      await reloadTaskDetails();
+      await reloadComments();
+    } catch (error) {
+      showToast("Error actualizando estado", "error");
+    } finally {
+      setUpdatingStatus(false);
+    }
+  };
+  const priority =
+    priorityConfig[
+    (task_details?.priority as "low" | "medium" | "high") ?? "medium"
+    ];
   return (
     <ScreenContainer noPadding>
       <View style={{ flex: 1, backgroundColor: "#FAFAFA" }}>
@@ -72,54 +121,26 @@ export default function TaskDetailScreen() {
             paddingBottom: 130,
           }}
         >
-
-          {task_details?.priority === "low" ? (<>
-            <View
+          <View
+            style={{
+              alignSelf: "flex-start",
+              backgroundColor: priority.background,
+              paddingHorizontal: 12,
+              paddingVertical: 6,
+              borderRadius: 999,
+              marginBottom: 14,
+            }}
+          >
+            <Text
               style={{
-                alignSelf: "flex-start",
-                backgroundColor: "#FFECE5",
-                paddingHorizontal: 12,
-                paddingVertical: 6,
-                borderRadius: 999,
-                marginBottom: 14,
+                color: priority.color,
+                fontWeight: "900",
+                fontSize: 12,
               }}
             >
-              <Text style={{ color: "#FA541C", fontWeight: "900", fontSize: 12 }}>
-                PRIORIDAD BAJA
-              </Text>
-            </View>
-          </>) : task_details?.priority === "hight" ? (<>
-            <View
-              style={{
-                alignSelf: "flex-start",
-                backgroundColor: "#FFECE5",
-                paddingHorizontal: 12,
-                paddingVertical: 6,
-                borderRadius: 999,
-                marginBottom: 14,
-              }}
-            >
-              <Text style={{ color: "#FA541C", fontWeight: "900", fontSize: 12 }}>
-                PRIORIDAD ALTA
-              </Text>
-            </View>
-          </>) : (<>
-            <View
-              style={{
-                alignSelf: "flex-start",
-                backgroundColor: "#FFECE5",
-                paddingHorizontal: 12,
-                paddingVertical: 6,
-                borderRadius: 999,
-                marginBottom: 14,
-              }}
-            >
-              <Text style={{ color: "#FA541C", fontWeight: "900", fontSize: 12 }}>
-                PRIORIDAD MEDIA
-              </Text>
-            </View>
-          </>)}
-
+              {priority.label}
+            </Text>
+          </View>
 
           <Text
             style={{
@@ -150,7 +171,36 @@ export default function TaskDetailScreen() {
             <StatusOption active={task_details?.status === "in_progress"} icon="sync-outline" label="EN PROCESO" />
             <StatusOption active={task_details?.status === "completed"} icon="checkmark-circle-outline" label="COMPLETADA" />
           </View>
-
+          {task_details?.status !== "completed" && (
+            <TouchableOpacity
+              activeOpacity={0.85}
+              disabled={updatingStatus}
+              onPress={handleNextStatus}
+              style={{
+                height: 52,
+                borderRadius: 14,
+                backgroundColor: "#FA541C",
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 34,
+                opacity: updatingStatus ? 0.7 : 1,
+              }}
+            >
+              <Text
+                style={{
+                  color: "#FFFFFF",
+                  fontSize: 15,
+                  fontWeight: "900",
+                }}
+              >
+                {updatingStatus
+                  ? "Actualizando..."
+                  : task_details?.status === "pending"
+                    ? "Iniciar tarea"
+                    : "Marcar como completada"}
+              </Text>
+            </TouchableOpacity>
+          )}
           <View style={{ flexDirection: "row", gap: 16, marginBottom: 34 }}>
             <InfoCard
               iconType="avatar"
@@ -306,6 +356,25 @@ export default function TaskDetailScreen() {
   );
 }
 
+const priorityConfig = {
+  low: {
+    label: "PRIORIDAD BAJA",
+    background: "#ECFDF3",
+    color: "#16A34A",
+  },
+
+  medium: {
+    label: "PRIORIDAD MEDIA",
+    background: "#FFF7E6",
+    color: "#D97706",
+  },
+
+  high: {
+    label: "PRIORIDAD ALTA",
+    background: "#FFECE5",
+    color: "#FA541C",
+  },
+};
 
 
 

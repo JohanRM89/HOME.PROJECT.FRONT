@@ -103,10 +103,6 @@ export default function CreateTasksScreen() {
                 showToast("Error al crear la tarea", "error");
 
         }
-        // Aquí llamas tu servicio/API
-        // await createTask(data);
-
-        //  router.back();
     };
 
     return (

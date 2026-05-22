@@ -1,9 +1,10 @@
 import { useAuthStore } from "@/modules/auth/ui/auth.store";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
+import { AvatarInitials } from "@/shared/components/member/avatars";
 import { useToastStore } from "@/shared/storage/useToastStore";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { Image, ScrollView, TouchableOpacity, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native-paper";
 
 export default function ProfileScreen() {
@@ -58,35 +59,10 @@ export default function ProfileScreen() {
         >
           <View style={{ alignItems: "center", marginBottom: 42 }}>
             <View style={{ position: "relative" }}>
-              <Image
-                source={{ uri: "https://i.pravatar.cc/200?img=12" }}
-                style={{
-                  width: 128,
-                  height: 128,
-                  borderRadius: 999,
-                  borderWidth: 4,
-                  borderColor: "#FED7C3",
-                }}
-              />
 
-              <TouchableOpacity
-                activeOpacity={0.85}
-                style={{
-                  position: "absolute",
-                  right: 2,
-                  bottom: 8,
-                  width: 32,
-                  height: 32,
-                  borderRadius: 999,
-                  backgroundColor: "#FA541C",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderWidth: 3,
-                  borderColor: "#FAFAFA",
-                }}
-              >
-                <Ionicons name="pencil" size={15} color="#FFFFFF" />
-              </TouchableOpacity>
+                      <AvatarInitials name={user?.name || "User"} active={true}  />
+              
+        
             </View>
 
             <Text

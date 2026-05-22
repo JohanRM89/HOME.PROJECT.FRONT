@@ -1,6 +1,7 @@
 import { AuthUseCase } from "@/modules/auth/application/auth.usecase";
 import { AuthApi } from "@/modules/auth/infrastructure/auth.api";
 import { ScreenContainer } from "@/shared/components/common/ScreenContainer";
+import { useToastStore } from "@/shared/storage/useToastStore";
 import { inputTextStyle } from "@/shared/theme/theme.conf";
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,6 +36,7 @@ export default function RegisterScreen() {
   const [apiError, setApiError] = useState<string | null>(null);
   const [apiSucces, setApiSucces] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+    const showToast = useToastStore((s) => s.show);
 
   const {
     control,
@@ -64,12 +66,12 @@ export default function RegisterScreen() {
         password: data.password,
       });
 
-      setApiSucces("Cuenta creada correctamente");
+      showToast("Cuenta creada correctamente", "success");
       reset();
 
       router.push("/(auth)/login");
     } catch (error: any) {
-      setApiError(error.message);
+      showToast(error.message, "error");
     }
   };
 
