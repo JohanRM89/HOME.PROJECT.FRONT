@@ -2,6 +2,7 @@ import { httpClient } from "@/shared/api/httpClients";
 import {
   CreateCommentTask,
   ISendDataTask,
+  ResponseDataCalendarTask,
   ResponseDataCreateTask,
   ResponseDataListaTareas,
   ResponseMessageData,
@@ -39,7 +40,7 @@ export class TaskApi implements TaskRepository {
   async getCalendarTasksByDay(
     groupId: string,
     selectedDay: string,
-  ): Promise<ResponseDataListaTareas> {
+  ): Promise<ResponseDataCalendarTask> {
     const response = await httpClient.get(
       `/tasks/familias/${groupId}/calendario?dia=${selectedDay}`,
     );

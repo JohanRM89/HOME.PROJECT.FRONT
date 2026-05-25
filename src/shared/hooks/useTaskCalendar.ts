@@ -1,5 +1,7 @@
 import { TaskUseCase } from "@/modules/tasks/application/task.usecase";
-import { DataListaTareas } from "@/modules/tasks/domain/ITaskRepository";
+import {
+  ICalendarTask
+} from "@/modules/tasks/domain/ITaskRepository";
 import { TaskApi } from "@/modules/tasks/infraestructure/task.api";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -9,7 +11,7 @@ export function useCalendarTasks(
 ) {
   const useCase = useMemo(() => new TaskUseCase(new TaskApi()), []);
 
-  const [tasks, setTasks] = useState<DataListaTareas[]>([]);
+  const [tasks, setTasks] = useState<ICalendarTask[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

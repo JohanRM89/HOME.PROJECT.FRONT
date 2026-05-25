@@ -1,4 +1,5 @@
 
+import { formatDateEs } from "@/shared/ultis/formatDate";
 import { View } from "react-native";
 import { Text } from "react-native-paper";
 
@@ -34,7 +35,7 @@ export  function CommentCard({
           fontWeight: "700",
         }}
       >
-        {meta}
+        {formatDateEs(meta)}
       </Text>
     </View>
   );

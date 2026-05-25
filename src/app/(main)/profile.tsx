@@ -37,12 +37,7 @@ export default function ProfileScreen() {
             justifyContent: "center",
           }}
         >
-          <TouchableOpacity
-            onPress={() => router.back()}
-            style={{ position: "absolute", left: 20 }}
-          >
-            <Ionicons name="arrow-back" size={24} color="#111827" />
-          </TouchableOpacity>
+         
 
           <Text style={{ fontSize: 20, fontWeight: "900", color: "#111827" }}>
             Perfil
@@ -92,7 +87,7 @@ export default function ProfileScreen() {
           <SectionTitle title="Configuración" />
 
           <View style={{ gap: 4, marginBottom: 30 }}>
-            <ProfileOption
+            {/* <ProfileOption
               icon="notifications-outline"
               title="Notificaciones"
             />
@@ -100,7 +95,7 @@ export default function ProfileScreen() {
             <ProfileOption
               icon="shield-outline"
               title="Seguridad"
-            />
+            /> */}
 
             <ProfileOption
               icon="globe-outline"

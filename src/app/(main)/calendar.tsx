@@ -4,10 +4,11 @@ import { EmptyState } from "@/shared/components/tasks/EmptyState";
 import { MonthButton } from "@/shared/components/tasks/MonthButton";
 import { TaskDayCard } from "@/shared/components/tasks/TaskDayCalendar";
 import { useCalendarTasks } from "@/shared/hooks/useTaskCalendar";
+import { formatDateEs } from "@/shared/ultis/formatDate";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useMemo, useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
 import { Text } from "react-native-paper";
 
 const WEEK_DAYS = ["LU", "MA", "MI", "JU", "VI", "SÁ", "DO"];
@@ -131,17 +132,13 @@ export default function CalendarScreen() {
             justifyContent: "space-between",
           }}
         >
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="#111827" />
-          </TouchableOpacity>
+
 
           <Text style={{ fontSize: 20, fontWeight: "900", color: "#111827" }}>
             Calendario
           </Text>
 
-          <TouchableOpacity>
-            <Ionicons name="search-outline" size={24} color="#334155" />
-          </TouchableOpacity>
+
         </View>
 
         <ScrollView
@@ -312,9 +309,30 @@ export default function CalendarScreen() {
             <EmptyState />
           ) : (
             <View style={{ gap: 14 }}>
-              {calendarTasks.map((task, index) => (
-                <TaskDayCard key={index} {...task} />
-              ))}
+              {tasks.map((task, index) => (
+                <TaskDayCard
+                  title={task.title}
+                  time={formatDateEs(task.due_date)}
+                  status={
+                    task.status === "pending"
+                      ? "Pendiente"
+                      : task.status === "in_progress"
+                        ? "En proceso"
+                        : "Completada"
+                  }
+                  icon={task.category_icon as keyof typeof Ionicons.glyphMap}
+                  bg={`${task.category_color}22`}
+                  color={task.category_color}
+                  category={task.category_name}
+                  onPress={() =>
+
+                    router.push({
+                      pathname: "/(details)/tasks_detail",
+                      params: { taskId: task.id },
+                    })
+
+                  }
+                />))}
             </View>
           )}
         </ScrollView>

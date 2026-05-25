@@ -206,12 +206,14 @@ export default function TaskDetailScreen() {
               iconType="avatar"
               label="RESPONSABLE"
               value={task_details?.assigned_to_name}
+              isDate={false}
             />
 
             <InfoCard
               icon="calendar-outline"
               label="VENCIMIENTO"
               value={task_details?.due_date}
+              isDate={true}
             />
           </View>
 
@@ -249,12 +251,16 @@ export default function TaskDetailScreen() {
             <Text style={{ fontSize: 20, fontWeight: "900", color: "#111827" }}>
               Notas y Comentarios
             </Text>
+            {task_details?.status !== "completed" && (
+              <TouchableOpacity onPress={() => setShowNoteInput(true)}>
+                <Text style={{ color: "#FA541C", fontWeight: "800", fontSize: 14 }}>
+                  + Añadir
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => setShowNoteInput(true)}>
-              <Text style={{ color: "#FA541C", fontWeight: "800", fontSize: 14 }}>
-                + Añadir
-              </Text>
-            </TouchableOpacity>
+            )
+            }
+
           </View>
           {showNoteInput && (
             <View

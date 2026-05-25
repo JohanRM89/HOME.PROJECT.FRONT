@@ -4,6 +4,7 @@ import { SearchInput } from "@/shared/components/home/SearchInput";
 import { PriorityFilter } from "@/shared/components/tasks/PriorityFilter";
 import { TaskRow } from "@/shared/components/tasks/TaskRow";
 import { useTasks } from "@/shared/hooks/useTask";
+import { formatDateEs } from "@/shared/ultis/formatDate";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useState } from "react";
@@ -52,7 +53,7 @@ export default function TasksScreen() {
             placeholder="Buscar tareas..."
           />
 
-        
+
           {/* Priority filters */}
           <View
             style={{
@@ -140,11 +141,22 @@ export default function TasksScreen() {
               >
                 <View style={{ gap: 14, paddingRight: 4 }}>
                   {tasks.map((task) => (
+
                     <TaskRow
                       key={task.id}
+                      taskId={task.id}
                       title={task.title}
-                      date={task.due_date}
-                      status={task.status === "pending" ? "Pendiente" : task.status === "in_progress" ? "En proceso" : "Completada"}
+                      date={formatDateEs(task.due_date)}
+                      status={
+                        task.status === "pending"
+                          ? "Pendiente"
+                          : task.status === "in_progress"
+                            ? "En proceso"
+                            : "Completada"
+                      }
+                      categoryName={task.name}
+                      categoryIcon={task.icon as keyof typeof Ionicons.glyphMap}
+                      categoryColor={task.color}
                       onPress={() =>
 
                         router.push({
@@ -152,9 +164,9 @@ export default function TasksScreen() {
                           params: { taskId: task.id },
                         })
 
-                      }
-
+                      }                   // onDeleteSuccess={reloadTasks}
                     />
+
                   ))}
                 </View>
               </ScrollView>

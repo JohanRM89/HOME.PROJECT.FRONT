@@ -36,7 +36,7 @@ export default function HomeScreen() {
           flex: 1,
           backgroundColor: "#FAFAFA",
         }}
-          contentContainerStyle={{ paddingBottom: 120, paddingTop: 20 }}
+        contentContainerStyle={{ paddingBottom: 120, paddingTop: 20 }}
 
         showsVerticalScrollIndicator={false}
       >
@@ -183,6 +183,13 @@ export default function HomeScreen() {
                             ? "En proceso"
                             : "Completada"
                       }
+                      dueDate={task.due_date}
+                      categoryName={task.name}
+                      categoryIcon={task.icon as keyof typeof Ionicons.glyphMap}
+                      categoryColor={task.color}
+                      assignedToName={task.assigned_to_name}
+  priority={task.priority as "low" | "medium" | "high"}
+                      points={task.points}
                     />
                   ))}
                 </View>
@@ -263,7 +270,7 @@ export default function HomeScreen() {
               <View style={{ gap: 14, paddingRight: 4 }}>
                 {tasks_group.map((task) => (
                   <TaskCard
-                    key={`family-${task.id}`}
+                    key={task.id}
                     title={task.title}
                     description={task.description}
                     status={
@@ -273,6 +280,13 @@ export default function HomeScreen() {
                           ? "En proceso"
                           : "Completada"
                     }
+                    dueDate={task.due_date}
+                    categoryName={task.name}
+                    categoryIcon={task.icon as keyof typeof Ionicons.glyphMap}
+                    categoryColor={task.color}
+                    assignedToName={task.assigned_to_name}
+                    priority={task.priority as "low" | "medium" | "high"}
+                    points={task.points}
                   />
                 ))}
               </View>

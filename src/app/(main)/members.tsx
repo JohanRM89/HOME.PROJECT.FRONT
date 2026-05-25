@@ -4,7 +4,6 @@ import { MemberRow } from "@/shared/components/member/memberRow";
 import { useMembers } from "@/shared/hooks/useMembers";
 import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
-import { router } from "expo-router";
 import { useState } from "react";
 import {
   Image,
@@ -44,17 +43,13 @@ const random = Math.random();
             justifyContent: "space-between",
           }}
         >
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="#111827" />
-          </TouchableOpacity>
+       
 
           <Text style={{ fontSize: 19, fontWeight: "900", color: "#111827" }}>
             Miembros del Hogar
           </Text>
 
-          <TouchableOpacity>
-            <Ionicons name="settings-outline" size={24} color="#334155" />
-          </TouchableOpacity>
+      
         </View>
 
         <ScrollView

@@ -4,9 +4,7 @@ import { ChartBar } from "@/shared/components/reports/CharBar";
 import { ProgressCard } from "@/shared/components/reports/ProgressCard";
 import { SummaryCard } from "@/shared/components/reports/SummaryCard";
 import { useReports } from "@/shared/hooks/useReports";
-import { Ionicons } from "@expo/vector-icons";
-import { router } from "expo-router";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Text } from "react-native-paper";
 
 export default function ReportsScreen() {
@@ -31,17 +29,11 @@ export default function ReportsScreen() {
             justifyContent: "space-between",
           }}
         >
-          <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="#111827" />
-          </TouchableOpacity>
-
+         
           <Text style={{ fontSize: 19, fontWeight: "900", color: "#111827" }}>
             Reportes de Cumplimiento
           </Text>
 
-          <TouchableOpacity>
-            <Ionicons name="calendar-outline" size={24} color="#334155" />
-          </TouchableOpacity>
         </View>
 
         <ScrollView
@@ -66,7 +58,7 @@ export default function ReportsScreen() {
             style={{
               flexDirection: "row",
               gap: 18,
-              marginTop: 28,
+              marginTop: 2,
             }}
           >
             <SummaryCard
@@ -96,6 +88,7 @@ export default function ReportsScreen() {
               padding: 24,
               height: 330,
               marginBottom: 44,
+              marginTop: 18,
             }}
           >
             <Text style={{ fontSize: 15, color: "#64748B", marginBottom: 4 }}>

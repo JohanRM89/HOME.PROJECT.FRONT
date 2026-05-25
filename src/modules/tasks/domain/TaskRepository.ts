@@ -1,6 +1,7 @@
 import {
   CreateCommentTask,
   ISendDataTask,
+  ResponseDataCalendarTask,
   ResponseDataCreateTask,
   ResponseDataListaTareas,
   ResponseMessageData,
@@ -17,6 +18,6 @@ export interface TaskRepository {
   getCalendarTasksByDay(
     groupId: string,
     selectedDay: string,
-  ): Promise<ResponseDataListaTareas>;
+  ): Promise<ResponseDataCalendarTask>;
   postCreateTask(data: ISendDataTask): Promise<ResponseDataCreateTask>;
 }

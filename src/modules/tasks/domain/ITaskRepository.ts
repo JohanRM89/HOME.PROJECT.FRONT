@@ -28,6 +28,31 @@ export interface ResponseDataListaTareas {
     totalPages: number;
   };
 }
+export interface ResponseDataCalendarTask {
+  data: ICalendarTask[];
+  message: string;
+  ok: boolean;
+}
+export interface ICalendarTask {
+  id: string;
+
+  title: string;
+
+  status: "pending" | "in_progress" | "completed";
+
+  priority: "low" | "medium" | "high";
+
+  due_date: string;
+
+  points: number;
+
+  category_name: string;
+
+  category_icon: string;
+
+  category_color: string;
+}
+
 export interface ResponseTareas {
   data: DataListaTareas;
   message: string;
@@ -74,6 +99,9 @@ export interface DataListaTareas {
   created_by_name: string;
   assigned_to_name: string;
   group_name: string;
+  color: string;
+  name: string;
+  icon: string;
 }
 
 export interface ITaskRepository {
