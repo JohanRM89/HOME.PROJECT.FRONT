@@ -312,6 +312,7 @@ export default function CalendarScreen() {
               {tasks.map((task, index) => (
                 <TaskDayCard
                   title={task.title}
+                  key={index}
                   time={formatDateEs(task.due_date)}
                   status={
                     task.status === "pending"

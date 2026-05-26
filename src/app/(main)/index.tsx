@@ -36,7 +36,7 @@ export default function HomeScreen() {
           flex: 1,
           backgroundColor: "#FAFAFA",
         }}
-        contentContainerStyle={{ paddingBottom: 120, paddingTop: 20 }}
+        contentContainerStyle={{ paddingBottom: 30, paddingTop: 20 }}
 
         showsVerticalScrollIndicator={false}
       >
@@ -107,95 +107,91 @@ export default function HomeScreen() {
             maxHeight: TASK_CARD_HEIGHT * MAX_VISIBLE_TASKS,
           }}
         >
-          <ScrollView
-            scrollEnabled={shouldScroll}
-            showsVerticalScrollIndicator={false}
-          >
 
-            {tasks.length === 0 ? (
+
+          {tasks.length === 0 ? (
+            <View
+              style={{
+                backgroundColor: "#FFFFFF",
+                borderRadius: 18,
+                borderWidth: 1,
+                borderColor: "#EEF2F7",
+                paddingVertical: 34,
+                paddingHorizontal: 24,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <View
                 style={{
-                  backgroundColor: "#FFFFFF",
-                  borderRadius: 18,
-                  borderWidth: 1,
-                  borderColor: "#EEF2F7",
-                  paddingVertical: 34,
-                  paddingHorizontal: 24,
-                  alignItems: "center",
+                  width: 68,
+                  height: 68,
+                  borderRadius: 999,
+                  backgroundColor: "#FFF1E8",
                   justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: 18,
                 }}
               >
-                <View
-                  style={{
-                    width: 68,
-                    height: 68,
-                    borderRadius: 999,
-                    backgroundColor: "#FFF1E8",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginBottom: 18,
-                  }}
-                >
-                  <Ionicons
-                    name="clipboard-outline"
-                    size={32}
-                    color="#FA541C"
-                  />
-                </View>
-
-                <Text
-                  style={{
-                    fontSize: 18,
-                    fontWeight: "900",
-                    color: "#111827",
-                    marginBottom: 8,
-                  }}
-                >
-                  No hay tareas por ahora
-                </Text>
-
-                <Text
-                  style={{
-                    fontSize: 15,
-                    lineHeight: 22,
-                    color: "#64748B",
-                    textAlign: "center",
-                  }}
-                >
-                  Todo está al día. Cuando tengas nuevas tareas aparecerán aquí.
-                </Text>
+                <Ionicons
+                  name="clipboard-outline"
+                  size={32}
+                  color="#FA541C"
+                />
               </View>
-            ) : (
-              <ScrollView
-                scrollEnabled={shouldScroll}
-                showsVerticalScrollIndicator={false}
+
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: "900",
+                  color: "#111827",
+                  marginBottom: 8,
+                }}
               >
-                <View style={{ gap: 14, paddingRight: 4 }}>
-                  {tasks.map((task) => (
-                    <TaskCard
-                      key={task.id}
-                      title={task.title}
-                      description={task.description}
-                      status={
-                        task.status === "pending"
-                          ? "Pendiente"
-                          : task.status === "in_progress"
-                            ? "En proceso"
-                            : "Completada"
-                      }
-                      dueDate={task.due_date}
-                      categoryName={task.name}
-                      categoryIcon={task.icon as keyof typeof Ionicons.glyphMap}
-                      categoryColor={task.color}
-                      assignedToName={task.assigned_to_name}
-  priority={task.priority as "low" | "medium" | "high"}
-                      points={task.points}
-                    />
-                  ))}
-                </View>
-              </ScrollView>
-            )}
-          </ScrollView>
+                No hay tareas por ahora
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  lineHeight: 22,
+                  color: "#64748B",
+                  textAlign: "center",
+                }}
+              >
+                Todo está al día. Cuando tengas nuevas tareas aparecerán aquí.
+              </Text>
+            </View>
+          ) : (
+            <ScrollView
+              scrollEnabled={shouldScroll}
+              showsVerticalScrollIndicator={false}
+            >
+              <View style={{ gap: 14, paddingRight: 4 }}>
+                {tasks.map((task) => (
+                  <TaskCard
+                    key={task.id}
+                    title={task.title}
+                    description={task.description}
+                    status={
+                      task.status === "pending"
+                        ? "Pendiente"
+                        : task.status === "in_progress"
+                          ? "En proceso"
+                          : "Completada"
+                    }
+                    dueDate={task.due_date}
+                    categoryName={task.name}
+                    categoryIcon={task.icon as keyof typeof Ionicons.glyphMap}
+                    categoryColor={task.color}
+                    assignedToName={task.assigned_to_name}
+                    priority={task.priority as "low" | "medium" | "high"}
+                    points={task.points}
+                  />
+                ))}
+              </View>
+            </ScrollView>
+          )}
         </View>
 
         {/* FAMILY */}
@@ -206,7 +202,6 @@ export default function HomeScreen() {
         <View
           style={{
             maxHeight: TASK_CARD_HEIGHT * MAX_VISIBLE_TASKS,
-            paddingBottom: 28,
           }}
         >
           {tasks_group.length === 0 ? (
@@ -264,7 +259,7 @@ export default function HomeScreen() {
             </View>
           ) : (
             <ScrollView
-              scrollEnabled={shouldScroll}
+              scrollEnabled={shouldScrollFamilyTasks}
               showsVerticalScrollIndicator={false}
             >
               <View style={{ gap: 14, paddingRight: 4 }}>
